@@ -1,0 +1,7 @@
+{
+  "name": "OutingFit — Mumbai Weather-Grounded Outing Stylist",
+  "description": "Personal outing preparation app for Mumbai. Tell OutingFit where you're going in any language and get weather-grounded outfit advice and interactive packing checklists.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

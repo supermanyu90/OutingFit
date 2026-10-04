@@ -1,0 +1,29 @@
+# ==============================================================================
+# Render Blueprint Specification for OutingFit
+# Official Docs: https://render.com/docs/blueprint-spec
+# ==============================================================================
+services:
+  - type: web
+    name: outingfit-mumbai
+    runtime: node
+    plan: starter
+    region: oregon # Or singapore / frankfurt
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 22.14.0
+      - key: GEMINI_API_KEY
+        sync: false # Configured securely in Render Dashboard (Secret)
+      - key: SERPAPI_API_KEY
+        sync: false # Configured securely in Render Dashboard (Secret, Optional)
+      - key: SENTRY_DSN
+        sync: false # Configured securely in Render Dashboard (Secret, Optional)
+      - key: WEATHER_API_TIMEOUT_MS
+        value: "5000"
+      - key: INFERENCE_TIMEOUT_MS
+        value: "8000"
