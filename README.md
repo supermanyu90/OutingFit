@@ -47,6 +47,10 @@ npm run test:scenarios         # end-to-end against a running server (BASE=http:
 
 `test:scenarios` writes the actual results to `docs/TEST_RESULTS.md`.
 
+## Deploy
+
+Render, via the `render.yaml` Blueprint — see [DEPLOYMENT.md](DEPLOYMENT.md).
+
 ## Configuration
 
 | Variable | Purpose |

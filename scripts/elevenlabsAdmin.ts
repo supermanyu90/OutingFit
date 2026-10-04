@@ -123,12 +123,22 @@ export function runAgentConversation(opts: AgentRunOptions): Promise<{ events: A
       if (finished) return;
       finished = true;
       clearTimeout(timer);
+      if (mic) clearInterval(mic);
       try {
         ws.close();
       } catch {}
       err ? reject(Object.assign(err, { events })) : resolve({ events, audioBytes, metadata });
     };
     const timer = setTimeout(() => finish(), opts.timeoutMs ?? 120000);
+    // A real microphone streams continuously, silence included. Going fully quiet
+    // between turns is not what the agent's speech pipeline expects.
+    const silenceChunk = Buffer.alloc(3200).toString('base64');
+    let micOpen = false;
+    const mic = opts.textOnly
+      ? null
+      : setInterval(() => {
+          if (micOpen && !sending && !finished && ws.readyState === 1) ws.send(JSON.stringify({ user_audio_chunk: silenceChunk }));
+        }, 100);
 
     const sendNextTurn = async () => {
       if (sending || turnIdx >= opts.turns.length) return;
@@ -174,6 +184,7 @@ export function runAgentConversation(opts: AgentRunOptions): Promise<{ events: A
       switch (data.type) {
         case 'conversation_initiation_metadata':
           metadata = data.conversation_initiation_metadata_event;
+          micOpen = true;
           {
             const m = String(metadata?.agent_output_audio_format || '').match(/pcm_(\d+)/);
             if (m) bytesPerSecond = Number(m[1]) * 2;
