@@ -13,6 +13,8 @@ export interface VenueRecord {
   aliases: string[];
   placeTypes: string[];
   neighborhood: string;
+  /** GeoNames locality used as the forecast point (venues themselves are not geocodable). */
+  forecastLocality?: string;
   reputationNote: string;
   isVerified: boolean;
   valetAvailable: boolean;
@@ -47,6 +49,7 @@ export const REPUTED_VENUES: VenueRecord[] = [
     aliases: ['bombay canteen', 'tbc', 'kamala mills indian', 'canteen lower parel'],
     placeTypes: ['contemporary-indian', 'fine-dining', 'cocktails', 'dinner', 'lunch', 'celebration'],
     neighborhood: 'Kamala Mills, Lower Parel',
+    forecastLocality: 'Parel',
     reputationNote: "Consistently ranked among Asia's 50 Best Restaurants; pioneer of regional Indian gastronomic dining.",
     isVerified: true,
     valetAvailable: true,
@@ -68,6 +71,7 @@ export const REPUTED_VENUES: VenueRecord[] = [
     aliases: ['olive bandra', 'olive', 'olive pali hill', 'mediterranean bandra', 'sunday brunch bandra'],
     placeTypes: ['mediterranean', 'brunch', 'cocktails', 'romantic-dinner', 'bistro', 'outdoor-dining'],
     neighborhood: 'Pali Hill, Bandra West',
+    forecastLocality: 'Khar West',
     reputationNote: 'Legendary Mumbai culinary institution famous for Mediterranean dining, celebrity clientele, and iconic white-walled courtyard.',
     isVerified: true,
     valetAvailable: true,
@@ -89,6 +93,7 @@ export const REPUTED_VENUES: VenueRecord[] = [
     aliases: ['wasabi', 'wasabi taj', 'japanese colaba', 'taj mahal palace wasabi'],
     placeTypes: ['japanese', 'fine-dining', 'luxury', 'sushi', 'romantic-dinner', 'celebration'],
     neighborhood: 'The Taj Mahal Palace, Colaba (South Mumbai)',
+    forecastLocality: 'Colaba',
     reputationNote: 'Iconic Iron Chef Masaharu Morimoto luxury dining room overlooking the Gateway of India.',
     isVerified: true,
     valetAvailable: true,
@@ -110,6 +115,7 @@ export const REPUTED_VENUES: VenueRecord[] = [
     aliases: ['o pedro', 'pedro bkc', 'goan bkc', 'portuguese bkc'],
     placeTypes: ['contemporary-indian', 'bistro', 'cocktails', 'lunch', 'dinner', 'casual-fine-dining'],
     neighborhood: 'Bandra-Kurla Complex (BKC)',
+    forecastLocality: 'Bandra Kurla Complex',
     reputationNote: 'Critically acclaimed Goan & Portuguese bistro by Hunger Inc. Hospitality, revered for sourdoughs, seafood, and tropical cocktails.',
     isVerified: true,
     valetAvailable: true,
@@ -131,6 +137,7 @@ export const REPUTED_VENUES: VenueRecord[] = [
     aliases: ['cecconis', 'cecconi', 'soho house italian', 'juhu beach italian'],
     placeTypes: ['italian', 'fine-dining', 'coastal', 'beachfront', 'brunch', 'romantic-dinner', 'pizza-pasta'],
     neighborhood: 'Soho House, Juhu Tara Road',
+    forecastLocality: 'Juhu',
     reputationNote: 'Classic Northern Italian seaside dining with wood-fired ovens, handmade pasta, and ocean sunset panoramas.',
     isVerified: true,
     valetAvailable: true,
@@ -152,6 +159,7 @@ export const REPUTED_VENUES: VenueRecord[] = [
     aliases: ['trishna', 'trishna fort', 'trishna seafood', 'butter pepper garlic crab'],
     placeTypes: ['seafood', 'coastal', 'heritage', 'lunch', 'dinner', 'casual-fine-dining'],
     neighborhood: 'Kala Ghoda, Fort',
+    forecastLocality: 'Kala Ghoda',
     reputationNote: 'Legendary Mangalorean seafood restaurant internationally renowned for its signature Butter Pepper Garlic Crab.',
     isVerified: true,
     valetAvailable: true,
@@ -173,6 +181,7 @@ export const REPUTED_VENUES: VenueRecord[] = [
     aliases: ['masque', 'masque tasting menu', 'masque mahalaxmi'],
     placeTypes: ['fine-dining', 'contemporary-indian', 'tasting-menu', 'celebration', 'romantic-dinner'],
     neighborhood: 'Shakti Mills Lane, Mahalaxmi',
+    forecastLocality: 'Mahalakshmi',
     reputationNote: "Ranked among the World's 50 Best Discovery and Asia's 50 Best; avant-garde botanical 10-course Indian tasting experience.",
     isVerified: true,
     valetAvailable: true,
@@ -194,6 +203,7 @@ export const REPUTED_VENUES: VenueRecord[] = [
     aliases: ['cincin', 'cin cin', 'cincin bkc', 'italian bkc'],
     placeTypes: ['italian', 'wine-bar', 'lunch', 'dinner', 'pasta-pizza', 'business-lunch'],
     neighborhood: 'Raheja Towers, BKC',
+    forecastLocality: 'Bandra Kurla Complex',
     reputationNote: 'Vibrant Venetian cicchetti and wine bar celebrating authentic Italian handmade pasta and limoncello.',
     isVerified: true,
     valetAvailable: true,
@@ -215,6 +225,7 @@ export const REPUTED_VENUES: VenueRecord[] = [
     aliases: ['subko', 'subko bandra', 'subko ranwar', 'artisanal coffee bandra'],
     placeTypes: ['cafe', 'coffee', 'bakery', 'breakfast', 'brunch', 'art-craft'],
     neighborhood: 'Ranwar Village, Bandra West',
+    forecastLocality: 'Khar West',
     reputationNote: "India's premier single-origin specialty coffee roastery and sourdough craftery, located in a restored 1925 Portuguese-Goan village cottage.",
     isVerified: true,
     valetAvailable: false,
@@ -233,9 +244,10 @@ export const REPUTED_VENUES: VenueRecord[] = [
   {
     id: 'bastian-dadar',
     name: 'Bastian - At The Top',
-    aliases: ['bastian dadar', 'bastian kohinoor', 'bastian rooftop', 'bastian'],
+    aliases: ['bastian dadar', 'bastian kohinoor', 'bastian rooftop', 'bastian at the top'],
     placeTypes: ['seafood', 'pan-asian', 'fine-dining', 'cocktails', 'rooftop', 'celebration'],
     neighborhood: 'Kohinoor Square, Dadar West',
+    forecastLocality: 'Dadar West',
     reputationNote: 'Skyline dining 48 floors up with panoramic 360-degree Mumbai sea views and opulent seafood.',
     isVerified: true,
     valetAvailable: true,
@@ -250,6 +262,28 @@ export const REPUTED_VENUES: VenueRecord[] = [
     waterloggingProneNearby: ['Hindmata Flyover lower surface lanes', 'Dadar TT Circle'],
     sourceCitation: 'Kohinoor Square Facility Management',
     sourceTimestamp: '2026-10-02T14:00:00+05:30',
+  },
+  {
+    id: 'bastian-bandra',
+    name: 'Bastian (Bandra West)',
+    aliases: ['bastian bandra', 'bastian linking road'],
+    placeTypes: ['seafood', 'dinner', 'cocktails'],
+    neighborhood: 'Linking Road, Bandra West',
+    forecastLocality: 'Khar West',
+    reputationNote: 'Seafood restaurant sharing the Bastian name with the Dadar rooftop branch.',
+    isVerified: false,
+    valetAvailable: false,
+    valetDetails: 'Not confirmed.',
+    coveredDropOff: false,
+    dropOffWalkMinutes: 2,
+    dropOffNote: 'Not confirmed — ask the venue.',
+    dressCode: 'Not confirmed.',
+    isIndoor: true,
+    indoorAcDegree: 'Not confirmed',
+    sunExposureLevel: 'partial',
+    waterloggingProneNearby: [],
+    sourceCitation: 'OutingFit curated registry (name only; amenities unconfirmed)',
+    sourceTimestamp: '2026-10-04T00:00:00+05:30',
   },
 ];
 

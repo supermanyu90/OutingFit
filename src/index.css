@@ -1,12 +1,109 @@
 @import "tailwindcss";
 
 @layer base {
+  :root {
+    /* Glass surfaces: translucent fill, blur of what's behind, 1px bright edge */
+    --glass-fill: rgba(255, 255, 255, 0.42);
+    --glass-fill-strong: rgba(255, 255, 255, 0.55);
+    --glass-fill-subtle: rgba(255, 255, 255, 0.34);
+    --glass-edge: rgba(255, 255, 255, 0.85);
+    --glass-edge-soft: rgba(255, 255, 255, 0.55);
+    --glass-shadow: 0 10px 34px rgba(15, 23, 42, 0.1);
+    --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    --glass-blur: 18px;
+    --glass-dark-fill: rgba(15, 23, 42, 0.62);
+    --glass-dark-edge: rgba(255, 255, 255, 0.22);
+  }
+
   body {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #1e293b;
+    background-color: #e6ecf5;
+    /* Colour fields give the frosted layers something to blur. */
+    background-image:
+      radial-gradient(38rem 30rem at 6% 2%, rgba(251, 191, 36, 0.55), transparent 62%),
+      radial-gradient(36rem 30rem at 96% 6%, rgba(56, 189, 248, 0.5), transparent 62%),
+      radial-gradient(44rem 34rem at 78% 96%, rgba(167, 139, 250, 0.5), transparent 62%),
+      radial-gradient(34rem 28rem at 4% 88%, rgba(52, 211, 153, 0.42), transparent 62%),
+      radial-gradient(30rem 24rem at 50% 45%, rgba(244, 114, 182, 0.22), transparent 65%);
+    background-attachment: fixed;
   }
-  
+
   h1, h2, h3, .font-display {
     font-family: 'Syne', 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  /* Primary card: panels like the form, weather, wardrobe */
+  .glass {
+    background: var(--glass-fill);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    border: 1px solid var(--glass-edge);
+    box-shadow: var(--glass-shadow), var(--glass-highlight);
+  }
+
+  /* Nested surfaces inside a glass card (list items, transcript box) */
+  .glass-subtle {
+    background: var(--glass-fill-subtle);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    backdrop-filter: blur(10px) saturate(140%);
+    border: 1px solid var(--glass-edge-soft);
+    box-shadow: var(--glass-highlight);
+  }
+
+  /* Sticky navigation bar */
+  .glass-nav {
+    background: var(--glass-fill-strong);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+    backdrop-filter: blur(22px) saturate(180%);
+    border-bottom: 1px solid var(--glass-edge);
+    box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06), var(--glass-highlight);
+  }
+
+  /* Segmented controls / pill groups sitting on glass */
+  .glass-pill {
+    background: rgba(255, 255, 255, 0.35);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-edge-soft);
+  }
+
+  /* Dark smoked glass for the spoken summary */
+  .glass-dark {
+    background: var(--glass-dark-fill);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+    border: 1px solid var(--glass-dark-edge);
+    box-shadow: 0 8px 32px rgba(15, 23, 42, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+
+  /* Form inputs on glass */
+  .glass-input {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(148, 163, 184, 0.55);
+  }
+}
+
+/* Without backdrop-filter support, raise opacity so text stays readable. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root {
+    --glass-fill: rgba(255, 255, 255, 0.92);
+    --glass-fill-strong: rgba(255, 255, 255, 0.96);
+    --glass-fill-subtle: rgba(255, 255, 255, 0.85);
+    --glass-dark-fill: rgba(15, 23, 42, 0.94);
+  }
+}
+
+/* Respect users who ask for less transparency. */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass-fill: #ffffff;
+    --glass-fill-strong: #ffffff;
+    --glass-fill-subtle: #f8fafc;
+    --glass-dark-fill: #0f172a;
+    --glass-blur: 0px;
   }
 }
 
@@ -16,10 +113,10 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: rgba(148, 163, 184, 0.6);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {

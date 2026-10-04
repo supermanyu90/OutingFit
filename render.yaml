@@ -19,6 +19,22 @@ services:
         value: 22.14.0
       - key: GEMINI_API_KEY
         sync: false # Configured securely in Render Dashboard (Secret)
+      - key: GEMMA_MODEL
+        value: gemma-4-26b-a4b-it
+      - key: OLLAMA_URL
+        value: "off" # no local Ollama on Render; Gemini API only
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: ELEVENLABS_AGENT_ID
+        sync: false # from `npm run setup:agent`
+      - key: ELEVENLABS_VOICE_ID
+        sync: false
+      - key: ELEVENLABS_AGENT_LANG_EN
+        sync: false
+      - key: ELEVENLABS_AGENT_LANG_HI
+        sync: false
+      - key: ELEVENLABS_AGENT_LANG_MR
+        sync: false
       - key: SERPAPI_API_KEY
         sync: false # Configured securely in Render Dashboard (Secret, Optional)
       - key: SENTRY_DSN
@@ -26,4 +42,4 @@ services:
       - key: WEATHER_API_TIMEOUT_MS
         value: "5000"
       - key: INFERENCE_TIMEOUT_MS
-        value: "8000"
+        value: "25000"

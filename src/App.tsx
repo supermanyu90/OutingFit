@@ -1,410 +1,280 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Car,
-  Sun,
-  CloudRain,
-  Sparkles,
-  ShieldAlert,
-  Cpu,
-  BookOpen,
-  Info,
-  CheckCircle2,
-  Activity,
-} from 'lucide-react';
-import { Navbar } from './components/Navbar';
-import { DestinationSearch } from './components/DestinationSearch';
-import { ThreeCardsDisplay } from './components/ThreeCardsDisplay';
-import { ScenarioDemo } from './components/ScenarioDemo';
-import { WaterloggingAdvisory } from './components/WaterloggingAdvisory';
-import { ModelDocsModal } from './components/ModelDocsModal';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Car, Compass, CalendarClock, FlaskConical, Type, Cpu, Mic } from 'lucide-react';
 import { SerpApiDiscovery } from './components/SerpApiDiscovery';
-import { TelemetryModal } from './components/TelemetryModal';
-import {
-  VenueRecord,
-  WeatherEvidence,
-  WaterloggingEvidence,
-  WaterloggingSpot,
-  RecommendationResponse,
-  ScenarioDemoData,
-  ProviderDocumentation,
-  DiscoveredDestination,
-} from './types';
+import { VoicePanel } from './components/planner/VoicePanel';
+import { OutingFormPanel } from './components/planner/OutingFormPanel';
+import { WeatherPanel } from './components/planner/WeatherPanel';
+import { RecommendationCards } from './components/planner/RecommendationCards';
+import { SpokenSummary } from './components/planner/SpokenSummary';
+import { WaterloggingPanel } from './components/planner/WaterloggingPanel';
+import { WardrobePanel } from './components/planner/WardrobePanel';
+import { ScenarioLab, Scenario, buildScenarios } from './components/planner/ScenarioLab';
+import { api, AppStatus } from './api';
+import { Language, LANGUAGE_OPTIONS } from './i18n';
+import { useOutingSession } from './useOutingSession';
+import type { DiscoveredDestination } from './types';
+
+type Tab = 'plan' | 'scenarios' | 'discover';
+
+function addDay(date: string) {
+  const d = new Date(`${date}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + 1);
+  return d.toISOString().slice(0, 10);
+}
 
 export default function App() {
-  const [currentTab, setCurrentTab] = useState<'discover' | 'planner' | 'scenarios' | 'waterlogging'>('discover');
-  const [allVenues, setAllVenues] = useState<VenueRecord[]>([]);
-  const [selectedVenue, setSelectedVenue] = useState<VenueRecord | null>(null);
+  const [tab, setTab] = useState<Tab>('plan');
+  const [language, setLanguage] = useState<Language>('en');
+  const [textOnly, setTextOnly] = useState(false);
+  const [status, setStatus] = useState<AppStatus | null>(null);
+  const [statusErr, setStatusErr] = useState<string | null>(null);
+  const [adviceSource, setAdviceSource] = useState<'ui' | 'agent'>('ui');
+  const [runningScenario, setRunningScenario] = useState<string | null>(null);
+  const s = useOutingSession('en');
 
-  // User input parameters
-  const [departureTime, setDepartureTime] = useState('12:30 PM');
-  const [returnTime, setReturnTime] = useState('03:30 PM');
-  const [occasion, setOccasion] = useState('Casual Lunch');
-  const [expectedOutdoorWalking, setExpectedOutdoorWalking] = useState<'minimal' | 'moderate' | 'extended'>('minimal');
-  const [simulatedScenarioKey, setSimulatedScenarioKey] = useState<'sunny_lunch' | 'rainy_dinner' | undefined>(undefined);
-  const [simulatedFailureKey, setSimulatedFailureKey] = useState<'weather' | 'inference' | undefined>(undefined);
-
-  // Recommendations and evidence state
-  const [recommendationData, setRecommendationData] = useState<RecommendationResponse | null>(null);
-  const [weatherEvidence, setWeatherEvidence] = useState<WeatherEvidence | null>(null);
-  const [waterloggingEvidence, setWaterloggingEvidence] = useState<WaterloggingEvidence | null>(null);
-  const [waterloggingSpots, setWaterloggingSpots] = useState<WaterloggingSpot[]>([]);
-  const [mandatoryDisclaimer, setMandatoryDisclaimer] = useState<string>('');
-  const [demoData, setDemoData] = useState<ScenarioDemoData | null>(null);
-  const [providerInfo, setProviderInfo] = useState<ProviderDocumentation | null>(null);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [isModelDocsOpen, setIsModelDocsOpen] = useState(false);
-  const [isTelemetryOpen, setIsTelemetryOpen] = useState(false);
-
-  // Fetch initial registry & metadata
   useEffect(() => {
-    const initData = async () => {
-      try {
-        const [venuesRes, wlRes, provRes, demoRes] = await Promise.all([
-          fetch('/api/destinations'),
-          fetch('/api/waterlogging'),
-          fetch('/api/provider-info'),
-          fetch('/api/scenarios/demo'),
-        ]);
-
-        if (venuesRes.ok) {
-          const venues: VenueRecord[] = await venuesRes.json();
-          setAllVenues(venues);
-          if (venues.length > 0) {
-            setSelectedVenue(venues[1]); // Default to Olive Bar & Kitchen (Bandra)
-          }
-        }
-
-        if (wlRes.ok) {
-          const wl = await wlRes.json();
-          setWaterloggingSpots(wl.alerts || []);
-          setMandatoryDisclaimer(wl.mandatoryUnknownsNotice || '');
-        }
-
-        if (provRes.ok) {
-          const prov = await provRes.json();
-          setProviderInfo(prov);
-        }
-
-        if (demoRes.ok) {
-          const demo = await demoRes.json();
-          setDemoData(demo);
-        }
-      } catch (err) {
-        console.warn('Initial data load error:', err);
-      }
-    };
-
-    initData();
+    api.status().then(setStatus, (e) => setStatusErr(e.message));
   }, []);
 
-  // Generate Recommendations via Gemma
-  const handleGenerate = async (overrideParams?: {
-    venue?: VenueRecord;
-    depTime?: string;
-    retTime?: string;
-    scenarioKey?: 'sunny_lunch' | 'rainy_dinner';
-    simulateFailure?: 'weather' | 'inference';
-  }) => {
-    const venueToUse = overrideParams?.venue || selectedVenue || allVenues[0];
-    if (!venueToUse) return;
-
-    setIsLoading(true);
-    try {
-      const res = await fetch('/api/recommend', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          destinationId: venueToUse.id,
-          departureTime: overrideParams?.depTime || departureTime,
-          returnTime: overrideParams?.retTime || returnTime,
-          occasion,
-          expectedOutdoorWalking,
-          simulatedWeatherScenario: overrideParams?.scenarioKey !== undefined ? overrideParams.scenarioKey : simulatedScenarioKey,
-          simulateFailure: overrideParams?.simulateFailure !== undefined ? overrideParams.simulateFailure : simulatedFailureKey,
-        }),
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        setRecommendationData(data.recommendation);
-        setWeatherEvidence(data.weatherEvidence);
-        setWaterloggingEvidence(data.waterloggingEvidence);
-      }
-    } catch (err) {
-      console.error('Failed to generate recommendation:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Trigger initial recommendation once venue is ready
   useEffect(() => {
-    if (selectedVenue && !recommendationData) {
-      handleGenerate();
+    s.update({ language });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [language]);
+
+  const submit = useCallback(async () => {
+    setAdviceSource('ui');
+    await s.getAdvice();
+  }, [s]);
+
+  // The agent's client tools: same session, but advice requests are marked as agent-initiated
+  // so the page does not also auto-play the summary over the agent's voice.
+  const clientTools = useMemo(
+    () => ({
+      ...s.session.clientTools(),
+      get_outing_advice: async () => {
+        setAdviceSource('agent');
+        return s.getAdvice();
+      },
+    }),
+    [s.session, s.getAdvice]
+  );
+
+  const scenarios = useMemo(() => {
+    const today = status?.now.date ?? new Date().toISOString().slice(0, 10);
+    return buildScenarios(today, addDay(today), status?.now.time ?? '00:00');
+  }, [status]);
+
+  async function runScenario(sc: Scenario) {
+    setRunningScenario(sc.id);
+    setTab('plan');
+    try {
+      s.setResult(null);
+      if (sc.utterance) {
+        setLanguage(sc.utterance.language);
+        s.update({ ...emptyScenarioFields(), language: sc.utterance.language });
+        const p = await api.parse(sc.utterance.text);
+        s.applyParse(p);
+        if (!p.parsed) s.setError(p.error || 'Gemma could not read the request');
+        return;
+      }
+      s.update({ ...emptyScenarioFields(), ...sc.form, language });
+      if (sc.destinationQuery) {
+        const r = await s.resolve(sc.destinationQuery);
+        if (r?.status === 'ambiguous' && sc.pickCandidate) s.choose(sc.pickCandidate);
+      }
+      if (sc.autoRun) await submit();
+    } finally {
+      setRunningScenario(null);
     }
-  }, [selectedVenue]);
+  }
 
-  // Handle Scenario Demo apply
-  const handleApplyScenarioFromDemo = (
-    venue: VenueRecord,
-    depTime: string,
-    retTime: string,
-    scenarioKey: 'sunny_lunch' | 'rainy_dinner'
-  ) => {
-    setSelectedVenue(venue);
-    setDepartureTime(depTime);
-    setReturnTime(retTime);
-    setSimulatedScenarioKey(scenarioKey);
-    setCurrentTab('planner');
-    handleGenerate({ venue, depTime, retTime, scenarioKey });
-  };
-
-  // Handle Venue Selected from SerpApi Discovery
-  const handleSelectDiscoveredVenue = (discovered: DiscoveredDestination) => {
-    const venueRecord: VenueRecord = {
-      id: discovered.id,
-      name: discovered.name,
-      aliases: [discovered.name.toLowerCase()],
-      placeTypes: discovered.cuisineTypes,
-      neighborhood: discovered.neighborhood,
-      reputationNote: `${discovered.reviewProvenance[0]?.rating || 4.4}★ (${discovered.reviewProvenance[0]?.reviewCount || 500} verified reviews via ${discovered.reviewProvenance[0]?.platform || 'Google Maps'}). ${discovered.priceTier}`,
-      isVerified: discovered.amenities.valetParking.status === 'verified_official',
-      valetAvailable: discovered.amenities.valetParking.status === 'verified_official',
-      valetDetails: discovered.amenities.valetParking.details,
-      coveredDropOff: discovered.amenities.coveredEntrance.status === 'verified_official',
-      dropOffWalkMinutes: discovered.amenities.coveredEntrance.status === 'verified_official' ? 0 : 2,
-      dropOffNote: discovered.amenities.coveredEntrance.details,
-      dressCode: discovered.amenities.dressCodePolicy.details,
-      isIndoor: discovered.amenities.indoorAirConditioning.status === 'verified_official',
-      indoorAcDegree: '20°C typical indoor AC',
-      sunExposureLevel: 'partial',
-      waterloggingProneNearby: ['Subways along transit route to ' + discovered.neighborhood],
-      sourceCitation: discovered.reviewProvenance[0]?.sourceUrl || discovered.officialWebsiteUrl || 'SerpApi Verified Evidence Feed',
-      sourceTimestamp: new Date().toISOString(),
-    };
-
-    setSelectedVenue(venueRecord);
-    setCurrentTab('planner');
-    handleGenerate({ venue: venueRecord });
-  };
+  const caps = status?.voice.languages[language];
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] text-[#1E293B] flex flex-col font-sans">
-      {/* Navbar */}
-      <Navbar
-        currentTab={currentTab}
-        setCurrentTab={setCurrentTab}
-        weather={weatherEvidence}
-        onOpenModelDocs={() => setIsModelDocsOpen(true)}
-        onOpenTelemetry={() => setIsTelemetryOpen(true)}
-        modelIdentifier={providerInfo?.modelIdentifier || 'models/gemma-4-31b-it'}
-      />
-
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-        {/* Scenario Quick-Bar Ribbon */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-3 sm:p-4 shadow-2xs space-y-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-slate-800">Quick Demonstrations:</span>
-              <span className="text-xs text-slate-500 hidden md:inline">
-                Compare how advice shifts between weather conditions:
-              </span>
+    <div className="min-h-screen text-[#1E293B] flex flex-col font-sans">
+      <header className="sticky top-0 z-40 glass-nav">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center">
+              <Car className="w-5 h-5 text-amber-300" />
             </div>
-
-            <div className="flex items-center gap-2 flex-wrap">
-              <button
-                onClick={() => {
-                  const olive = allVenues.find((v) => v.id === 'olive-bandra') || allVenues[1];
-                  setSimulatedFailureKey(undefined);
-                  handleApplyScenarioFromDemo(olive, '12:30 PM', '03:30 PM', 'sunny_lunch');
-                }}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer border ${
-                  simulatedScenarioKey === 'sunny_lunch' && !simulatedFailureKey
-                    ? 'bg-amber-100 text-amber-900 border-amber-300 shadow-2xs'
-                    : 'bg-amber-50/70 hover:bg-amber-100 text-amber-800 border-amber-200/70'
-                }`}
-              >
-                <Sun className="w-3.5 h-3.5 text-amber-600" />
-                <span>Sunny Outdoor Lunch (Olive Bandra)</span>
-              </button>
-
-              <button
-                onClick={() => {
-                  const canteen = allVenues.find((v) => v.id === 'bombay-canteen') || allVenues[0];
-                  setSimulatedFailureKey(undefined);
-                  handleApplyScenarioFromDemo(canteen, '07:30 PM', '11:00 PM', 'rainy_dinner');
-                }}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer border ${
-                  simulatedScenarioKey === 'rainy_dinner' && !simulatedFailureKey
-                    ? 'bg-indigo-100 text-indigo-900 border-indigo-300 shadow-2xs'
-                    : 'bg-indigo-50/70 hover:bg-indigo-100 text-indigo-800 border-indigo-200/70'
-                }`}
-              >
-                <CloudRain className="w-3.5 h-3.5 text-indigo-600" />
-                <span>Rainy Indoor Dinner (Bombay Canteen)</span>
-              </button>
+            <div>
+              <span className="text-lg font-bold tracking-tight text-slate-900 font-display block leading-none">OutingFit</span>
+              <span className="text-[11px] font-semibold text-slate-500">Mumbai outing planner</span>
             </div>
           </div>
+          <nav className="flex items-center gap-1 glass-pill p-1 rounded-xl" aria-label="Sections">
+            {(
+              [
+                ['plan', 'Plan', <CalendarClock key="p" className="w-3.5 h-3.5" />],
+                ['scenarios', 'Test scenarios', <FlaskConical key="s" className="w-3.5 h-3.5" />],
+                ['discover', 'Discover', <Compass key="d" className="w-3.5 h-3.5" />],
+              ] as const
+            ).map(([k, label, icon]) => (
+              <button
+                key={k}
+                onClick={() => setTab(k)}
+                aria-current={tab === k ? 'page' : undefined}
+                className={`px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 cursor-pointer ${tab === k ? 'bg-white/90 text-slate-900 shadow-xs ring-1 ring-white' : 'text-slate-600 hover:text-slate-900 hover:bg-white/40'}`}
+              >
+                {icon}
+                <span className="hidden sm:inline">{label}</span>
+              </button>
+            ))}
+          </nav>
+        </div>
+      </header>
 
-          {/* Dependency Failure Verification Controls */}
-          <div className="pt-2 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-            <div className="flex items-center gap-1.5 text-slate-500 text-[11px]">
-              <ShieldAlert className="w-3.5 h-3.5 text-rose-500" />
-              <span>Verification Checklist: Test Graceful Dependency Failure Handling</span>
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-5 space-y-5">
+        {/* Language + output mode */}
+        <div className="flex flex-wrap items-center gap-3 justify-between">
+          <div className="flex items-center gap-1 glass rounded-xl p-1" role="radiogroup" aria-label="Language">
+            {LANGUAGE_OPTIONS.map((l) => (
+              <button
+                key={l.code}
+                role="radio"
+                aria-checked={language === l.code}
+                onClick={() => setLanguage(l.code)}
+                className={`px-3 py-1.5 rounded-lg text-sm font-semibold cursor-pointer ${language === l.code ? 'bg-slate-900/90 text-white' : 'text-slate-700 hover:bg-white/50'}`}
+              >
+                {l.native}
+              </button>
+            ))}
+          </div>
+          <label className="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
+            <input type="checkbox" checked={textOnly} onChange={(e) => setTextOnly(e.target.checked)} className="w-4 h-4 accent-slate-900" />
+            <Type className="w-3.5 h-3.5" /> Text only (no microphone, no audio)
+          </label>
+        </div>
+
+        {/* Capability disclosure for the selected language */}
+        <CapabilityStrip language={language} status={status} statusErr={statusErr} />
+
+        {tab === 'plan' && (
+          <div className="grid grid-cols-1 xl:grid-cols-[380px_1fr] gap-5 items-start">
+            <div className="space-y-5">
+              <VoicePanel language={language} status={status} textOnly={textOnly} clientTools={clientTools} onParsed={s.applyParse} spokenSummary={s.result?.spoken.text ?? null} />
+              <OutingFormPanel
+                form={s.form}
+                language={language}
+                ready={s.ready}
+                loading={s.loading}
+                onUpdate={s.update}
+                onResolve={(q) => void s.resolve(q)}
+                onChoose={s.choose}
+                onConfirmSchedule={() => s.confirmSchedule()}
+                onSubmit={submit}
+              />
             </div>
-
-            <div className="flex items-center gap-2 flex-wrap">
-              <button
-                onClick={() => {
-                  setSimulatedFailureKey('weather');
-                  handleGenerate({ simulateFailure: 'weather' });
-                }}
-                className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all cursor-pointer border ${
-                  simulatedFailureKey === 'weather'
-                    ? 'bg-rose-100 text-rose-900 border-rose-300 font-bold'
-                    : 'bg-slate-50 hover:bg-rose-50 text-slate-700 hover:text-rose-800 border-slate-200'
-                }`}
-                title="Test how the system behaves when the live weather station fails"
-              >
-                Test Weather Station Failure
-              </button>
-
-              <button
-                onClick={() => {
-                  setSimulatedFailureKey('inference');
-                  handleGenerate({ simulateFailure: 'inference' });
-                }}
-                className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all cursor-pointer border ${
-                  simulatedFailureKey === 'inference'
-                    ? 'bg-amber-100 text-amber-900 border-amber-300 font-bold'
-                    : 'bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-800 border-slate-200'
-                }`}
-                title="Test how the system behaves when the LLM provider exceeds the 8s SLA"
-              >
-                Test Inference SLA Timeout
-              </button>
-
-              <button
-                onClick={() => setIsTelemetryOpen(true)}
-                className="px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer border bg-indigo-50 hover:bg-indigo-100 text-indigo-950 border-indigo-300 shadow-2xs flex items-center gap-1"
-                title="Inspect Sentry Agent Tracing & Reproducible Failure Evidence"
-              >
-                <Activity className="w-3.5 h-3.5 text-indigo-600" />
-                <span>Sentry Diagnostics & Failure Evidence</span>
-              </button>
-
-              {simulatedFailureKey && (
-                <button
-                  onClick={() => {
-                    setSimulatedFailureKey(undefined);
-                    handleGenerate({ simulateFailure: undefined });
-                  }}
-                  className="px-2.5 py-1 rounded-lg text-[11px] font-medium text-slate-500 hover:text-slate-900 hover:bg-slate-100 underline cursor-pointer"
-                >
-                  Reset Live
-                </button>
+            <div className="space-y-5 min-w-0">
+              {s.error && <p className="text-xs text-rose-800 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2">{s.error}</p>}
+              {s.result ? (
+                <>
+                  {s.result.testFlags.length > 0 && (
+                    <p className="text-xs font-semibold text-violet-900 bg-violet-50 border border-violet-200 rounded-xl px-3 py-2">{s.result.testFlags.join(' · ')}</p>
+                  )}
+                  <SpokenSummary result={s.result} status={status} textOnly={textOnly} autoPlay={adviceSource === 'ui'} />
+                  <RecommendationCards result={s.result} />
+                  {s.result.wardrobe && (
+                    <WardrobePanel
+                      wardrobe={s.result.wardrobe}
+                      language={s.result.request.language}
+                      loading={s.loading}
+                      onChangeFormality={async (level) => {
+                        s.update({ formality: level });
+                        setAdviceSource('ui');
+                        await s.getAdvice();
+                      }}
+                    />
+                  )}
+                  <WeatherPanel weather={s.result.weather} />
+                  <WaterloggingPanel status={s.result.waterlogging} />
+                </>
+              ) : (
+                <div className="glass rounded-2xl p-8 text-center text-sm text-slate-600">
+                  Tell OutingFit where and when you're going (talk, dictate, type, or fill the form). Weather is fetched only after the place and times are confirmed.
+                  {caps && !caps.agent.supported && caps.agent.supported !== null && (
+                    <p className="mt-2 text-xs text-amber-800">Voice conversation is not available in this language: {caps.agent.note}</p>
+                  )}
+                </div>
               )}
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Tab 0: SerpApi Destination Discovery */}
-        {currentTab === 'discover' && (
+        {tab === 'scenarios' && <ScenarioLab scenarios={scenarios} onRun={runScenario} running={runningScenario} />}
+
+        {tab === 'discover' && (
           <SerpApiDiscovery
-            onSelectDiscoveredVenue={handleSelectDiscoveredVenue}
-          />
-        )}
-
-        {/* Tab 1: Outing Planner & Three Cards */}
-        {currentTab === 'planner' && (
-          <div className="space-y-6">
-            {/* Input Form with Venue Disambiguation */}
-            <DestinationSearch
-              selectedVenue={selectedVenue}
-              onSelectVenue={(v) => {
-                setSelectedVenue(v);
-                setSimulatedScenarioKey(undefined);
-              }}
-              departureTime={departureTime}
-              setDepartureTime={setDepartureTime}
-              returnTime={returnTime}
-              setReturnTime={setReturnTime}
-              occasion={occasion}
-              setOccasion={setOccasion}
-              expectedOutdoorWalking={expectedOutdoorWalking}
-              setExpectedOutdoorWalking={setExpectedOutdoorWalking}
-              onGenerate={() => handleGenerate()}
-              isLoading={isLoading}
-              allVenues={allVenues}
-            />
-
-            {/* The 3 Core Output Cards (Wear, Carry, Check) */}
-            {recommendationData && selectedVenue && weatherEvidence && waterloggingEvidence && (
-              <ThreeCardsDisplay
-                data={recommendationData}
-                venue={selectedVenue}
-                weather={weatherEvidence}
-                waterlogging={waterloggingEvidence}
-                onOpenModelDocs={() => setIsModelDocsOpen(true)}
-              />
-            )}
-          </div>
-        )}
-
-        {/* Tab 2: Comparative Demonstration Vertical Slice */}
-        {currentTab === 'scenarios' && (
-          <ScenarioDemo
-            demoData={demoData}
-            onApplyScenario={handleApplyScenarioFromDemo}
-          />
-        )}
-
-        {/* Tab 3: Waterlogging Monitor & Route Guardrails */}
-        {currentTab === 'waterlogging' && (
-          <WaterloggingAdvisory
-            spots={waterloggingSpots}
-            mandatoryDisclaimer={mandatoryDisclaimer}
+            onSelectDiscoveredVenue={async (d: DiscoveredDestination) => {
+              setTab('plan');
+              const r = await s.resolve(d.name);
+              if (!r || r.status === 'not_found') await s.resolve(d.neighborhood.split(/[(,]/)[0].trim());
+            }}
           />
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white py-6 mt-12 text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-          <div className="flex items-center gap-2 justify-center">
-            <Car className="w-4 h-4 text-slate-800" />
-            <span className="font-bold text-slate-900 font-display">OutingFit</span>
-            <span>·</span>
-            <span>Grounded in Gemma 4 31B (models/gemma-4-31b-it) & Verified Mumbai Municipal Logs</span>
-          </div>
-
-          <div className="flex items-center gap-3 justify-center">
-            <button
-              onClick={() => setIsModelDocsOpen(true)}
-              className="text-amber-800 hover:text-amber-950 font-semibold cursor-pointer underline"
-            >
-              Model Verification & Adapter Docs
-            </button>
-            <span>·</span>
-            <span>Missing reports never imply a clear route</span>
-          </div>
+      <footer className="glass-nav border-t border-white/70 py-4 text-[11px] text-slate-600">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row gap-2 justify-between">
+          <span>
+            Recommendations: OutingFit decision rules + Gemma ({status?.gemma.primary?.model ?? status?.gemma.fallback?.model ?? '—'}). Voice: ElevenLabs. Weather:{' '}
+            <a className="underline" href="https://open-meteo.com/" target="_blank" rel="noreferrer">
+              Open-Meteo.com
+            </a>{' '}
+            (CC BY 4.0). Places: GeoNames.
+          </span>
+          <span>Rain forecasts never imply road flooding or safe access.</span>
         </div>
       </footer>
+    </div>
+  );
+}
 
-      {/* Gemma Model & Provider Documentation Modal */}
-      <ModelDocsModal
-        isOpen={isModelDocsOpen}
-        onClose={() => setIsModelDocsOpen(false)}
-        providerInfo={providerInfo}
-      />
+function emptyScenarioFields() {
+  return {
+    destination: null,
+    destinationQuery: '',
+    destinationStatus: 'empty' as const,
+    candidates: [],
+    outdoorStart: '',
+    outdoorEnd: '',
+    indoorAc: 'unknown' as const,
+    feelsColdInAc: false,
+    colourPreference: '',
+    scheduleNotes: [],
+    fault: undefined,
+    weatherFixture: undefined,
+  };
+}
 
-      {/* Sentry Telemetry & Failure Diagnosis Modal */}
-      <TelemetryModal
-        isOpen={isTelemetryOpen}
-        onClose={() => setIsTelemetryOpen(false)}
-      />
+function CapabilityStrip({ language, status, statusErr }: { language: Language; status: AppStatus | null; statusErr: string | null }) {
+  if (statusErr) return <p className="text-xs text-rose-700">Could not load service status: {statusErr}</p>;
+  if (!status) return null;
+  const c = status.voice.languages[language];
+  const name = LANGUAGE_OPTIONS.find((l) => l.code === language)?.label;
+  const Badge = ({ ok, label, note }: { ok: boolean | null; label: string; note: string }) => (
+    <span title={note} className={`px-2 py-1 rounded-lg border text-[11px] ${ok ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : ok === null ? 'bg-slate-50 border-slate-200 text-slate-600' : 'bg-amber-50 border-amber-300 text-amber-900'}`}>
+      {ok ? '✓' : ok === null ? '?' : '✗'} {label}
+    </span>
+  );
+  const gemma = status.gemma.primary ?? status.gemma.fallback;
+  return (
+    <div className="flex flex-wrap items-center gap-1.5" aria-label={`What works in ${name}`}>
+      <span className="text-[11px] font-semibold text-slate-600 mr-1">{name}:</span>
+      <Badge ok={!!status.voice.agentConfigured && c.agent.supported !== false ? (c.agent.supported ?? null) : false} label="Voice conversation" note={c.agent.note} />
+      <Badge ok={c.stt.supported} label="Dictation" note={c.stt.note} />
+      <Badge ok={c.tts.supported} label="Spoken summary" note={c.tts.note} />
+      <Badge ok={true} label="Typing" note="Always available" />
+      <span className="text-[11px] text-slate-500 ml-2 flex items-center gap-1">
+        <Cpu className="w-3 h-3" /> Gemma: {gemma ? `${gemma.model} (${gemma.runtime})` : 'not configured'}
+        {status.gemma.primary && status.gemma.fallback ? `, fallback ${status.gemma.fallback.model}` : ''}
+      </span>
+      {!status.voice.configured && (
+        <span className="text-[11px] text-amber-800 flex items-center gap-1">
+          <Mic className="w-3 h-3" /> ElevenLabs is not configured — voice features are off; typing works.
+        </span>
+      )}
     </div>
   );
 }
