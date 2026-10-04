@@ -1,0 +1,349 @@
+{
+  "ranAt": "2026-10-04T12:19:36.732Z",
+  "base": "http://localhost:3100",
+  "status": {
+    "now": {
+      "date": "2026-10-04",
+      "time": "17:48",
+      "localIso": "2026-10-04T17:48"
+    },
+    "timezone": "Asia/Kolkata",
+    "gemma": {
+      "primary": {
+        "runtime": "gemini_api",
+        "model": "gemma-4-26b-a4b-it"
+      },
+      "fallback": {
+        "runtime": "ollama",
+        "model": "gemma3:4b",
+        "url": "http://127.0.0.1:11434"
+      },
+      "timeoutMs": 25000
+    },
+    "weather": {
+      "name": "Open-Meteo",
+      "model": "best_match (Open-Meteo automatic model selection)",
+      "docsUrl": "https://open-meteo.com/en/docs",
+      "attribution": "Weather data by Open-Meteo.com",
+      "attributionUrl": "https://open-meteo.com/",
+      "licence": "CC BY 4.0",
+      "geocodingAttribution": "Location data based on GeoNames (via Open-Meteo Geocoding API)",
+      "resolutionNote": "Hourly forecast. Rain probability is derived from ensemble models at ~27 km resolution; other fields come from the best-match deterministic model for the grid cell.",
+      "usageLimits": "Free tier: non-commercial use, <10,000 calls/day, <5,000/hour, <600/minute.",
+      "horizonDays": 16,
+      "cacheTtlSeconds": 600
+    },
+    "voice": {
+      "configured": true,
+      "agentConfigured": true,
+      "checkedAt": "2026-10-04T12:18:07.390Z",
+      "languages": {
+        "en": {
+          "stt": {
+            "supported": true,
+            "model": "scribe_v2",
+            "note": "Scribe v2"
+          },
+          "tts": {
+            "supported": true,
+            "model": "eleven_v3",
+            "note": "Speech synthesis via eleven_v3 (support per ElevenLabs docs (API key lacks models_read; not verified against the account))"
+          },
+          "agent": {
+            "supported": true,
+            "ttsModel": "eleven_flash_v2",
+            "note": "Verified by a live agent session during setup"
+          }
+        },
+        "hi": {
+          "stt": {
+            "supported": true,
+            "model": "scribe_v2",
+            "note": "Scribe v2 (documented WER band >5%–≤10%)"
+          },
+          "tts": {
+            "supported": true,
+            "model": "eleven_v3",
+            "note": "Speech synthesis via eleven_v3 (support per ElevenLabs docs (API key lacks models_read; not verified against the account))"
+          },
+          "agent": {
+            "supported": true,
+            "ttsModel": "eleven_v3_conversational",
+            "note": "Verified by a live agent session during setup"
+          }
+        },
+        "mr": {
+          "stt": {
+            "supported": true,
+            "model": "scribe_v2",
+            "note": "Scribe v2 (documented WER band >5%–≤10%)"
+          },
+          "tts": {
+            "supported": true,
+            "model": "eleven_v3",
+            "note": "Speech synthesis via eleven_v3 (support per ElevenLabs docs (API key lacks models_read; not verified against the account))"
+          },
+          "agent": {
+            "supported": true,
+            "ttsModel": "eleven_v3_conversational",
+            "note": "Verified by a live agent session during setup"
+          }
+        }
+      },
+      "ttsModelsByLanguage": {
+        "en": [
+          "eleven_v3",
+          "eleven_v4",
+          "eleven_multilingual_v2",
+          "eleven_flash_v2_5"
+        ],
+        "hi": [
+          "eleven_v3",
+          "eleven_v4",
+          "eleven_multilingual_v2",
+          "eleven_flash_v2_5"
+        ],
+        "mr": [
+          "eleven_v3",
+          "eleven_v4"
+        ]
+      }
+    },
+    "decisionConfig": {
+      "heat": {
+        "feelsLikeWarmC": 30,
+        "feelsLikeHotC": 36,
+        "humidityHighPct": 70
+      },
+      "uv": {
+        "protectFrom": 3,
+        "high": 6,
+        "veryHigh": 8
+      },
+      "rain": {
+        "probabilityPossiblePct": 30,
+        "probabilityLikelyPct": 60,
+        "amountMeaningfulMm": 0.5,
+        "hourlyHeavyMm": 4
+      },
+      "wind": {
+        "gustUmbrellaDifficultKmh": 39
+      },
+      "exposure": {
+        "minimalMinutes": 5,
+        "moderateMinutes": 30
+      },
+      "ac": {
+        "coolIndoorNote": "Indoor temperature is not measured; this follows your stated preference."
+      }
+    }
+  },
+  "reports": [
+    {
+      "id": "voice-agent-mr",
+      "title": "4b. Marathi voice conversation with the ElevenLabs agent (ambiguous venue)",
+      "status": "pass",
+      "checks": [
+        {
+          "name": "agent ASR transcribed mr speech",
+          "pass": true,
+          "detail": "उद्या संध्याकाळी सात वाजता बॅस्टियनला जायचं आहे. अकरा वाजेपर्यंत परत येईन. मला AC मध्ये थंडी वाजते. || दादरचं, बॅस्टियन एट द टॉप. || हो, बरोबर आहे. || हो, बरोबर."
+        },
+        {
+          "name": "agent called set_outing_details with the venue in Latin letters (spelling variants matched by the backend)",
+          "pass": true,
+          "detail": "{\"destination\":\"Bastian\",\"date\":\"2026-10-05\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"feels_cold_in_ac\":true}"
+        },
+        {
+          "name": "backend reported the venue as ambiguous to the agent",
+          "pass": true,
+          "detail": "{\"destination_status\":\"ambiguous\",\"destination\":null,\"destination_options\":[\"1. Bastian - At The Top — Kohinoor Square, Dadar West · forecast point: Dadar West\",\"2. Bastian (Bandra West) — Linking Roa"
+        },
+        {
+          "name": "agent asked and called choose_destination",
+          "pass": true,
+          "detail": "[{\"choice\":\"1\"}]"
+        },
+        {
+          "name": "agent confirmed date/times before fetching",
+          "pass": true,
+          "detail": "set_outing_details → choose_destination → confirm_details → get_outing_advice"
+        },
+        {
+          "name": "agent spoke the backend summary (agreement ≥ 85%)",
+          "pass": true,
+          "detail": "agreement 92%\n      summary: बाहेर 33.7°C तापमान आणि 85% आर्द्रता असल्याने सैल आणि श्वास घेण्यायोग्य कापडाचे कपडे वापरा. तुम्हाला AC मध्ये थंडी वाजते, म्हणून एक हलकी लेयर सोबत ठेवा. तसेच, वेन्यूमध्ये AC आहे का आणि कार तुम्हाला छताखाली सोडू शकते का, याची खात्री करून घ्या.\n      agent said: बाहेर तेहतीस पूर्णांक सात अंश सेल्सिअस तापमान आणि पंच्याऐंशी टक्के आर्द्रता असल्याने सैल आणि श्वास घेण्यायोग्य कापडाचे कपडे वापरा. तुम्हाला एसी मध्ये थंडी वाजते, म्हणून एक हलकी लेयर सोबत ठेवा. तसेच, वेन्यूमध्ये एसी आहे का आणि कार तुम्हाला छताखाली सोडू शकते का, याची खात्री करून घ्या. पूर्ण कार्ड्स स्क्रीनवर आहेत."
+        },
+        {
+          "name": "form ended on the Dadar branch, tomorrow",
+          "pass": true,
+          "detail": "Bastian - At The Top 2026-10-05 19:00-23:00"
+        }
+      ],
+      "notes": [
+        "agent audio received: 1748544 bytes; formats {\"in\":\"pcm_16000\",\"out\":\"pcm_16000\"}"
+      ],
+      "data": {
+        "events": [
+          {
+            "t": 406,
+            "type": "metadata",
+            "text": "{\"conversation_id\":\"conv_4301m43dkb26e3ftdxbrvm7jg1mx\",\"agent_output_audio_format\":\"pcm_16000\",\"user_input_audio_format\":\"pcm_16000\",\"persistent_session_token\":null}"
+          },
+          {
+            "t": 2577,
+            "type": "agent_response",
+            "text": "नमस्कार! तुम्ही मुंबईत कुठे जात आहात, कोणत्या दिवशी, आणि कधी निघणार व कधी परत येणार?"
+          },
+          {
+            "t": 8100,
+            "type": "user_audio_sent",
+            "text": "7.4s of audio"
+          },
+          {
+            "t": 18037,
+            "type": "user_transcript",
+            "text": "उद्या संध्याकाळी सात वाजता बॅस्टियनला जायचं आहे. अकरा वाजेपर्यंत परत येईन. मला AC मध्ये थंडी वाजते."
+          },
+          {
+            "t": 18039,
+            "type": "tool_call",
+            "tool": "set_outing_details",
+            "params": {
+              "destination": "Bastian",
+              "date": "2026-10-05",
+              "departure_time": "19:00",
+              "return_time": "23:00",
+              "feels_cold_in_ac": true
+            }
+          },
+          {
+            "t": 18856,
+            "type": "tool_result",
+            "tool": "set_outing_details",
+            "result": "{\"destination_status\":\"ambiguous\",\"destination\":null,\"destination_options\":[\"1. Bastian - At The Top — Kohinoor Square, Dadar West · forecast point: Dadar West\",\"2. Bastian (Bandra West) — Linking Road, Bandra West · forecast point: Khar West\"],\"date\":\"2026-10-05\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"schedule_confirmed\":false,\"outdoor_exposure\":\"minimal\",\"transport\":\"car\",\"covered_drop_off\":\"unknown\",\"feels_cold_in_ac\":true,\"occasion\":null,\"ready_for_advice\":false,\"missing\":[\"destination: choose one of the matching places\",\"confirmation of date and times\"],\"next_step\":\"Read destinat"
+          },
+          {
+            "t": 20704,
+            "type": "agent_response",
+            "text": "तुम्ही बॅस्टियन - एट द टॉप, दादर वेस्टला जात आहात की बॅस्टियन (वांद्रे वेस्ट), लिंकिंग रोडला?"
+          },
+          {
+            "t": 26978,
+            "type": "user_audio_sent",
+            "text": "2.7s of audio"
+          },
+          {
+            "t": 31747,
+            "type": "user_transcript",
+            "text": "दादरचं, बॅस्टियन एट द टॉप."
+          },
+          {
+            "t": 31747,
+            "type": "tool_call",
+            "tool": "choose_destination",
+            "params": {
+              "choice": "1"
+            }
+          },
+          {
+            "t": 31748,
+            "type": "tool_result",
+            "tool": "choose_destination",
+            "result": "{\"destination_status\":\"resolved\",\"destination\":\"Bastian - At The Top\",\"date\":\"2026-10-05\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"schedule_confirmed\":false,\"outdoor_exposure\":\"minimal\",\"transport\":\"car\",\"covered_drop_off\":\"unknown\",\"feels_cold_in_ac\":true,\"occasion\":null,\"ready_for_advice\":false,\"missing\":[\"confirmation of date and times\"],\"next_step\":\"Read the date, departure and return times back to the user; when they agree, call confirm_details.\"}"
+          },
+          {
+            "t": 36652,
+            "type": "agent_response",
+            "text": "ठीक आहे. तर, तुम्ही उद्या, पाच ऑक्टोबर दोन हजार सव्वीस रोजी, संध्याकाळी सात वाजता बॅस्टियन - एट द टॉपला जाणार आहात आणि रात्री अकरा वाजेपर्यंत परत येणार आहात. हे बरोबर आहे का?"
+          },
+          {
+            "t": 46692,
+            "type": "user_audio_sent",
+            "text": "1.6s of audio"
+          },
+          {
+            "t": 49859,
+            "type": "user_transcript",
+            "text": "हो, बरोबर आहे."
+          },
+          {
+            "t": 49860,
+            "type": "tool_call",
+            "tool": "confirm_details",
+            "params": {
+              "confirmed": true
+            }
+          },
+          {
+            "t": 49860,
+            "type": "tool_result",
+            "tool": "confirm_details",
+            "result": "{\"destination_status\":\"resolved\",\"destination\":\"Bastian - At The Top\",\"date\":\"2026-10-05\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"schedule_confirmed\":true,\"outdoor_exposure\":\"minimal\",\"transport\":\"car\",\"covered_drop_off\":\"unknown\",\"feels_cold_in_ac\":true,\"occasion\":null,\"ready_for_advice\":true,\"missing\":[],\"next_step\":\"Call get_outing_advice now, then read its spoken_summary aloud word for word.\"}"
+          },
+          {
+            "t": 50753,
+            "type": "agent_response",
+            "text": "तुमच्या आऊटिंगसाठी शिफारसी मिळवत आहे."
+          },
+          {
+            "t": 54516,
+            "type": "user_audio_sent",
+            "text": "1.7s of audio"
+          },
+          {
+            "t": 57828,
+            "type": "user_transcript",
+            "text": "हो, बरोबर."
+          },
+          {
+            "t": 58686,
+            "type": "agent_response",
+            "text": "तुमच्या आऊटिंगसाठी शिफारसी मिळवत आहे."
+          },
+          {
+            "t": 58686,
+            "type": "tool_call",
+            "tool": "get_outing_advice",
+            "params": {}
+          },
+          {
+            "t": 73789,
+            "type": "tool_result",
+            "tool": "get_outing_advice",
+            "result": "{\"status\":\"ok\",\"spoken_summary\":\"बाहेर 33.7°C तापमान आणि 85% आर्द्रता असल्याने सैल आणि श्वास घेण्यायोग्य कापडाचे कपडे वापरा. तुम्हाला AC मध्ये थंडी वाजते, म्हणून एक हलकी लेयर सोबत ठेवा. तसेच, वेन्यूमध्ये AC आहे का आणि कार तुम्हाला छताखाली सोडू शकते का, याची खात्री करून घ्या.\",\"weather_status\":\"live\",\"weather_notice\":null,\"instruction\":\"Say spoken_summary to the user exactly as written, then tell them the full cards are on screen. Do not add weather or advice.\"}"
+          },
+          {
+            "t": 81725,
+            "type": "agent_response",
+            "text": "बाहेर तेहतीस पूर्णांक सात अंश सेल्सिअस तापमान आणि पंच्याऐंशी टक्के आर्द्रता असल्याने सैल आणि श्वास घेण्यायोग्य कापडाचे कपडे वापरा. तुम्हाला एसी मध्ये थंडी वाजते, म्हणून एक हलकी लेयर सोबत ठेवा. तसेच, वेन्यूमध्ये एसी आहे का आणि कार तुम्हाला छताखाली सोडू शकते का, याची खात्री करून घ्या. पूर्ण कार्ड्स स्क्रीनवर आहेत."
+          }
+        ],
+        "form": {
+          "destination": {
+            "kind": "registry",
+            "venueId": "bastian-dadar",
+            "name": "Bastian - At The Top",
+            "forecastPoint": {
+              "label": "Dadar West, Mumbai (GeoNames locality)",
+              "lat": 19.02011,
+              "lon": 72.83811
+            }
+          },
+          "date": "2026-10-05",
+          "departure": "19:00",
+          "return": "23:00",
+          "outdoorExposure": "minimal",
+          "transport": "car",
+          "coveredDropOff": "unknown",
+          "venueSetting": "unknown",
+          "indoorAc": "unknown",
+          "feelsColdInAc": true,
+          "occasion": "",
+          "formality": "unknown",
+          "language": "mr"
+        }
+      }
+    }
+  ]
+}

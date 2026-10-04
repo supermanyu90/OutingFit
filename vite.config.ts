@@ -16,7 +16,8 @@ export default defineConfig(() => {
       // Do not modify—file watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
       // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
-      watch: process.env.DISABLE_HMR === 'true' ? null : {},
+      // Test runs write to docs/ — don't reload the page when they do.
+      watch: process.env.DISABLE_HMR === 'true' ? null : { ignored: ['**/docs/**', '**/tests/**', '**/scripts/**'] },
     },
   };
 });
