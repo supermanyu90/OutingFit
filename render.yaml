@@ -1,14 +1,18 @@
 # ==============================================================================
-# Render Blueprint Specification for OutingFit
-# Official Docs: https://render.com/docs/blueprint-spec
+# Render Blueprint for OutingFit — https://render.com/docs/blueprint-spec
+#
+# Values marked `sync: false` are entered in the Render Dashboard when the
+# Blueprint is first applied (copy them from your local .env). Never commit them.
 # ==============================================================================
 services:
   - type: web
     name: outingfit-mumbai
     runtime: node
     plan: starter
-    region: oregon # Or singapore / frankfurt
-    buildCommand: npm install && npm run build
+    region: singapore # closest Render region to Mumbai
+    # --include=dev: the Vite/Tailwind build needs dev dependencies even though
+    # NODE_ENV=production would otherwise skip them.
+    buildCommand: npm ci --include=dev && npm run build
     startCommand: npm start
     healthCheckPath: /healthz
     autoDeploy: true
@@ -17,29 +21,50 @@ services:
         value: production
       - key: NODE_VERSION
         value: 22.14.0
+
+      # --- Gemma (Gemini API; no local Ollama on Render) ---
       - key: GEMINI_API_KEY
-        sync: false # Configured securely in Render Dashboard (Secret)
+        sync: false
       - key: GEMMA_MODEL
         value: gemma-4-26b-a4b-it
+      - key: GEMMA_THINKING_LEVEL
+        value: minimal
       - key: OLLAMA_URL
-        value: "off" # no local Ollama on Render; Gemini API only
+        value: "off"
+      - key: INFERENCE_TIMEOUT_MS
+        value: "25000"
+
+      # --- ElevenLabs (IDs come from `npm run setup:agent`, see your .env) ---
       - key: ELEVENLABS_API_KEY
         sync: false
       - key: ELEVENLABS_AGENT_ID
-        sync: false # from `npm run setup:agent`
+        sync: false # main agent: English + Hindi preset
+      - key: ELEVENLABS_AGENT_ID_MR
+        sync: false # separate Marathi agent (the API rejects "mr" as a preset)
       - key: ELEVENLABS_VOICE_ID
         sync: false
+      # Per-language results of the live checks run by setup:agent.
       - key: ELEVENLABS_AGENT_LANG_EN
-        sync: false
+        value: ok
       - key: ELEVENLABS_AGENT_LANG_HI
-        sync: false
+        value: ok
       - key: ELEVENLABS_AGENT_LANG_MR
-        sync: false
-      - key: SERPAPI_API_KEY
-        sync: false # Configured securely in Render Dashboard (Secret, Optional)
-      - key: SENTRY_DSN
-        sync: false # Configured securely in Render Dashboard (Secret, Optional)
+        value: ok
+      - key: ELEVENLABS_AGENT_TTS_EN
+        value: eleven_flash_v2
+      - key: ELEVENLABS_AGENT_TTS_HI
+        value: eleven_v3_conversational
+      - key: ELEVENLABS_AGENT_TTS_MR
+        value: eleven_v3_conversational
+
+      # --- Weather (Open-Meteo, no key; free tier is non-commercial only) ---
       - key: WEATHER_API_TIMEOUT_MS
         value: "5000"
-      - key: INFERENCE_TIMEOUT_MS
-        value: "25000"
+      - key: WEATHER_CACHE_TTL_SECONDS
+        value: "600"
+
+      # --- Optional ---
+      - key: SERPAPI_API_KEY
+        sync: false
+      - key: SENTRY_DSN
+        sync: false

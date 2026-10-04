@@ -1,7 +1,7 @@
 # OutingFit — scenario test results
 
-Run at 2026-10-04T13:01:44.984Z (Mumbai 2026-10-04 18:25) against http://localhost:3100.
-Gemma: {"runtime":"gemini_api","model":"gemma-4-26b-a4b-it"} fallback {"runtime":"ollama","model":"gemma3:4b","url":"http://127.0.0.1:11434"}. ElevenLabs: configured; agent: configured.
+Run at 2026-10-04T13:43:42.532Z (Mumbai 2026-10-04 19:08) against http://localhost:3200.
+Gemma: {"runtime":"gemini_api","model":"gemma-4-26b-a4b-it"} fallback null. ElevenLabs: configured; agent: configured.
 
 | Scenario | Result |
 |---|---|
@@ -28,7 +28,7 @@ Gemma: {"runtime":"gemini_api","model":"gemma-4-26b-a4b-it"} fallback {"runtime"
 - ✅ spoken summary validated to cover essential/recommended items — covers wear.breathable_fabric, wear.loose_fit, carry.water, wear.sun_coverage, carry.hat, carry.sunglasses, carry.sunscreen
 - ✅ spoken numbers appear in displayed data — numbers: 9, 39
 
-Spoken summary: "Since you'll be outdoors for an extended time with a UV index of 9 and a feels-like temperature of 39°C, wear loose, breathable casual clothes and long sleeves for sun coverage. Don't forget to bring a hat, UV-rated sunglasses, sunscreen, and a water bottle to stay comfortable."
+Spoken summary: "Since you'll be outdoors for an extended time with a UV index of 9 and a feels-like temperature of 39°C, wear loose, breathable casual clothes and sun coverage like long sleeves. Don't forget to bring a hat, sunglasses, sunscreen, and a water bottle to stay comfortable."
 
 Items: wear:wear.sun_coverage(essential), wear:wear.breathable_fabric(recommended), wear:wear.loose_fit(recommended), wear:wear.formality(info), carry:carry.sunscreen(essential), carry:carry.water(recommended), carry:carry.hat(recommended), carry:carry.sunglasses(recommended), check:check.waterlogging(info)
 
@@ -43,9 +43,9 @@ Items: wear:wear.sun_coverage(essential), wear:wear.breathable_fabric(recommende
 - ✅ confirmed covered drop-off lowers umbrella to optional — optional
 - ✅ weather change → different items vs scenario 1 — sunny-only: carry.water, wear.sun_coverage, carry.hat, carry.sunglasses, carry.sunscreen; rainy-only: carry.umbrella, carry.rain_jacket, wear.wet_weather_footwear, wear.quick_dry, check.dress_code
 - ✅ spoken summary validated to cover essential/recommended items — covers wear.breathable_fabric, wear.loose_fit, carry.umbrella, wear.wet_weather_footwear, check.dress_code, check.waterlogging
-- ✅ spoken numbers appear in displayed data — numbers: 85, 17.2
+- ✅ spoken numbers appear in displayed data — numbers: 85, 17.2, 46
 
-Spoken summary: "For your dinner, wear smart casual, breathable, and loose clothing with grippy footwear. Since there is an 85% rain probability and 17.2mm of rain, please bring an umbrella and consider a rain jacket. Also, remember to check the venue's dress code and review any waterlogging reports before you head out."
+Spoken summary: "For your dinner, wear breathable, loose smart casual clothes and grippy footwear. Since there's an 85% chance of rain and 17.2mm of precipitation, bring an umbrella and consider a rain jacket for the 46km/h gusts. Finally, double-check the venue's dress code and look for any waterlogging reports before you head out."
 
 Items: wear:wear.breathable_fabric(recommended), wear:wear.loose_fit(recommended), wear:wear.wet_weather_footwear(recommended), wear:wear.quick_dry(optional), wear:wear.formality(info), carry:carry.umbrella(essential), carry:carry.rain_jacket(optional), check:check.dress_code(recommended), check:check.waterlogging(recommended)
 
@@ -53,7 +53,7 @@ Items: wear:wear.breathable_fabric(recommended), wear:wear.loose_fit(recommended
 
 **PASS**
 
-- ✅ live forecast used — cached, retrieved 2026-10-04T12:47:52.198Z
+- ✅ live forecast used — cached, retrieved 2026-10-04T13:36:19.678Z
 - ✅ AC layer recommended from stated preference — [{"kind":"preference","field":"feels_cold_in_ac","value":"yes"},{"kind":"preference","field":"indoor_ac","value":"user_expects"}]
 - ✅ no sun gear after sunset — sunset 2026-10-04T18:24
 - ✅ local Asia/Kolkata hours cover the outing; °C, %, mm, km/h units validated — window 2026-10-04T20:00→2026-10-04T23:00; hours 20:00,21:00,22:00,23:00; sunset 2026-10-04T18:24
@@ -61,7 +61,7 @@ Items: wear:wear.breathable_fabric(recommended), wear:wear.loose_fit(recommended
 - ✅ spoken numbers appear in displayed data — numbers: 33.2
 - note: resolve("Bastian At The Top") → resolved (Bastian - At The Top)
 
-Spoken summary: "For your anniversary dinner, wear breathable smart casual clothes to handle the 33.2°C feels-like temperature. Since you feel cold in AC, bring a light layer. Also, confirm the venue's smart chic dress code and check if your car can drop you off under cover."
+Spoken summary: "For your anniversary dinner, wear breathable smart casual clothes to handle the 33.2°C feels-like temperature. Since you feel cold in AC, bring a light layer. Also, confirm the venue's dress code regarding footwear and check if your car can drop you off under cover."
 
 Items: wear:wear.breathable_fabric(recommended), wear:wear.ac_layer(recommended), wear:wear.formality(info), check:check.drop_off_cover(recommended), check:check.dress_code(recommended), check:check.waterlogging(info)
 
@@ -74,15 +74,15 @@ Items: wear:wear.breathable_fabric(recommended), wear:wear.ac_layer(recommended)
 - ✅ "कल" date flagged for confirmation — date 2026-10-05; confirmations: "कल शाम" can refer to more than one date. Please confirm the date.
 - ✅ times extracted in 24h Mumbai time — 19:00–23:00
 - ✅ AC preference extracted — true
-- ✅ spoken summary validated to cover essential/recommended items — covers wear.breathable_fabric, wear.loose_fit, check.indoor_ac, check.drop_off_cover
+- ✅ spoken summary validated to cover essential/recommended items — covers wear.breathable_fabric, wear.loose_fit, wear.ac_layer, check.drop_off_cover
 - ✅ spoken numbers appear in displayed data — numbers: 33.7, 84
-- ✅ spoken summary in Devanagari (hi) — Bastian - At The Top के लिए सांस लेने योग्य और ढीले कपड़े पहनें क्योंकि तापमान 33.7°C और ह्यूमिडिटी 84% है। आपको एसी में ठंड लगती है, इसलिए एक हल्की लेयर साथ रखें। कृपया वेन्यू से एसी और कवर्ड ड्रॉप-ऑफ के बारे में पूछ लें।
-- ✅ spoken audio matches displayed summary (TTS → STT round trip) — TTS eleven_v3, 323544 bytes; agreement 75%; heard "Bastion at the top के लिए सांस लेने योग्य और ढीले कपड़े पहनें क्योंकि तापमान 33.7 degree celsius और humidity 84% है। आपको AC में ठंड लगती है इसलिए एक हल्की layer साथ रखें। कृपया venue से AC और covered drop off के बारे में पूछ लें।"
+- ✅ spoken summary in Devanagari (hi) — Bastian - At The Top के लिए ढीले और सांस लेने योग्य कपड़े पहनें क्योंकि तापमान 33.7°C और आर्द्रता 84% है। एसी में ठंड से बचने के लिए एक हल्का लेयर साथ रखें। कार से जाते समय ड्रॉप-ऑफ कवर की जांच कर लें।
+- ✅ spoken audio matches displayed summary (TTS → STT round trip) — TTS eleven_v3, 293033 bytes; agreement 77%; heard "Bastian at the top के लिए ढीले और सांस लेने योग्य कपड़े पहनें क्योंकि तापमान 33.7 डिग्री Celsius और आर्द्रता 84% है। AC में ठंड से बचने के लिए एक हल्का layer साथ रखें। car से जाते समय drop off cover की जांच कर लें।"
 - ✅ TTS refuses text that is not a backend summary — HTTP 403
 
-Spoken summary: "Bastian - At The Top के लिए सांस लेने योग्य और ढीले कपड़े पहनें क्योंकि तापमान 33.7°C और ह्यूमिडिटी 84% है। आपको एसी में ठंड लगती है, इसलिए एक हल्की लेयर साथ रखें। कृपया वेन्यू से एसी और कवर्ड ड्रॉप-ऑफ के बारे में पूछ लें।"
+Spoken summary: "Bastian - At The Top के लिए ढीले और सांस लेने योग्य कपड़े पहनें क्योंकि तापमान 33.7°C और आर्द्रता 84% है। एसी में ठंड से बचने के लिए एक हल्का लेयर साथ रखें। कार से जाते समय ड्रॉप-ऑफ कवर की जांच कर लें।"
 
-Items: wear:wear.breathable_fabric(recommended), wear:wear.loose_fit(recommended), wear:wear.ac_layer(optional), wear:wear.formality(info), check:check.indoor_ac(recommended), check:check.drop_off_cover(recommended), check:check.waterlogging(info)
+Items: wear:wear.breathable_fabric(recommended), wear:wear.loose_fit(recommended), wear:wear.ac_layer(recommended), wear:wear.formality(info), check:check.drop_off_cover(recommended), check:check.waterlogging(info)
 
 ## 4a. Marathi voice input with an ambiguous venue — Scribe dictation path
 
@@ -95,11 +95,11 @@ Items: wear:wear.breathable_fabric(recommended), wear:wear.loose_fit(recommended
 - ✅ AC preference extracted — true
 - ✅ spoken summary validated to cover essential/recommended items — covers wear.breathable_fabric, wear.loose_fit, wear.ac_layer, check.drop_off_cover
 - ✅ spoken numbers appear in displayed data — numbers: 33.7, 84
-- ✅ spoken summary in Devanagari (mr) — Bastian - At The Top साठी सैल आणि श्वास घेण्यायोग्य कपडे निवडा कारण तापमान 33.7°C आणि आर्द्रता 84% असेल. तुम्हाला एसीमध्ये थंडी वाजते, म्हणून एक हलकी लेयर सोबत ठेवा. वेन्यूचा ड्रेस कोड 'Smart Chic' आहे, तसेच कारमधून उतरताना ड्रॉप-ऑफ कव्हर आहे का ते तपासा.
-- ✅ spoken audio matches displayed summary (TTS → STT round trip) — TTS eleven_v3, 389999 bytes; agreement 97%; heard "बॅस्टियन ऍट द टॉप साठी सैल आणि श्वास घेण्यायोग्य कपडे निवडा. कारण तापमान तेहतीस पॉईंट पॉईंट सात डिग्री सेल्सिअस आणि आर्द्रता चौऱ्यांशी टक्के असेल. तुम्हाला AC मध्ये थंडी वाजते म्हणून एक हलकी लेयर सोबत ठेवा. वेन्यूचा ड्रेस कोड स्मार्ट शिक आहे. तसेच कारमधून उतरताना ड्रॉप ऑफ कव्हर आहे का ते तपासा."
+- ✅ spoken summary in Devanagari (mr) — Bastian - At The Top साठी, 33.7°C तापमान आणि 84% आर्द्रतेमुळे श्वास घेण्यायोग्य आणि सैल कपडे वापरा. तुम्हाला एसीमध्ये थंडी वाजते, म्हणून एक हलकी लेयर सोबत ठेवा. वेन्यूचा ड्रेस कोड 'Smart Chic' आहे, तसेच कार तुम्हाला छताखाली सोडेल का ते एकदा तपासा.
+- ✅ spoken audio matches displayed summary (TTS → STT round trip) — TTS eleven_v3, 356981 bytes; agreement 91%; heard "Bastian at the top साठी thirty-thirty point seven degree celsius तापमान आणि चौऱ्यांशी टक्के आर्द्रतेमुळे श्वास घेण्यायोग्य आणि सैल कपडे वापरा. तुम्हाला AC मध्ये थंडी वाजते म्हणून एक हलकी layer सोबत ठेवा. Venue चा dress code smart chic आहे. तसेच car तुम्हाला छताखाली सोडेल का ते एकदा तपासा."
 - ✅ TTS refuses text that is not a backend summary — HTTP 403
 
-Spoken summary: "Bastian - At The Top साठी सैल आणि श्वास घेण्यायोग्य कपडे निवडा कारण तापमान 33.7°C आणि आर्द्रता 84% असेल. तुम्हाला एसीमध्ये थंडी वाजते, म्हणून एक हलकी लेयर सोबत ठेवा. वेन्यूचा ड्रेस कोड 'Smart Chic' आहे, तसेच कारमधून उतरताना ड्रॉप-ऑफ कव्हर आहे का ते तपासा."
+Spoken summary: "Bastian - At The Top साठी, 33.7°C तापमान आणि 84% आर्द्रतेमुळे श्वास घेण्यायोग्य आणि सैल कपडे वापरा. तुम्हाला एसीमध्ये थंडी वाजते, म्हणून एक हलकी लेयर सोबत ठेवा. वेन्यूचा ड्रेस कोड 'Smart Chic' आहे, तसेच कार तुम्हाला छताखाली सोडेल का ते एकदा तपासा."
 
 Items: wear:wear.breathable_fabric(recommended), wear:wear.loose_fit(recommended), wear:wear.ac_layer(recommended), wear:wear.formality(info), check:check.drop_off_cover(recommended), check:check.waterlogging(info)
 
@@ -107,33 +107,33 @@ Items: wear:wear.breathable_fabric(recommended), wear:wear.loose_fit(recommended
 
 **PASS**
 
-- ✅ agent ASR transcribed hi speech — कल शाम 07:00 बजे Bastian जाना है। 11:00 बजे तक लौटूँगी। मुझे AC में ठंड लगती है। || दादर वाला, बैस्टियन एट द टॉप। || हाँ, कल यानी आने वाला दिन शाम सात से रात ग्यारह बजे तक, सही है।
+- ✅ agent ASR transcribed hi speech — कल शाम 07:00 बजे Bastion जाना है। 11:00 बजे तक लौटूँगी। मुझे AC में ठंड लगती है। || दादर वाला, बास्टियन एट द टॉप। || हाँ, कल यानी आने वाला दिन, शाम सात से रात ग्यारह बजे तक, सही है।
 - ✅ agent called set_outing_details with the venue in Latin letters (spelling variants matched by the backend) — {"destination":"Bastian","date":"2026-10-05","departure_time":"19:00","return_time":"23:00","feels_cold_in_ac":true}
 - ✅ backend reported the venue as ambiguous to the agent — {"destination_status":"ambiguous","destination":null,"destination_options":["1. Bastian - At The Top — Kohinoor Square, Dadar West · forecast point: Dadar West","2. Bastian (Bandra West) — Linking Roa
 - ✅ agent asked and called choose_destination — [{"choice":"1"}]
 - ✅ agent confirmed date/times before advice was fetched — set_outing_details → choose_destination → confirm_details
-- ✅ agent spoke the backend summary (agreement ≥ 85%) — agreement 100%<br>      summary: 33.7°C तापमान और 84% आर्द्रता के कारण सांस लेने योग्य और ढीले कपड़े पहनना अच्छा रहेगा। चूंकि आपको एसी में ठंड लगती है, एक हल्की लेयर साथ रखें। जाने से पहले वेन्यू से एसी और कवर्ड ड्रॉप-ऑफ के बारे में पूछ लें।<br>      agent said: बत्तीस दशमलव सात डिग्री सेल्सियस तापमान और चौरासी प्रतिशत आर्द्रता के कारण सांस लेने योग्य और ढीले कपड़े पहनना अच्छा रहेगा। चूंकि आपको एसी में ठंड लगती है, एक हल्की लेयर साथ रखें। जाने से पहले वेन्यू से एसी और कवर्ड ड्रॉप-ऑफ के बारे में पूछ लें। पूरी जानकारी स्क्रीन पर कार्ड्स में उपलब्ध है।
+- ✅ agent spoke the backend summary (agreement ≥ 85%) — agreement 100%<br>      summary: 33.7°C तापमान और 84% आर्द्रता के कारण ढीले और सांस लेने योग्य कपड़े पहनें। चूंकि आपको एसी में ठंड लगती है, एक हल्की लेयर साथ रखें। वेन्यू से एसी और कवर्ड ड्रॉप-ऑफ के बारे में पूछ लें। साथ ही, वेन्यू के ड्रेस कोड और जलभराव की स्थिति का भी ध्यान रखें।<br>      agent said: 33.7 डिग्री सेल्सियस तापमान और 84 प्रतिशत आर्द्रता के कारण ढीले और सांस लेने योग्य कपड़े पहनें। चूंकि आपको एसी में ठंड लगती है, एक हल्की लेयर साथ रखें। वेन्यू से एसी और कवर्ड ड्रॉप-ऑफ के बारे में पूछ लें। साथ ही, वेन्यू के ड्रेस कोड और जलभराव की स्थिति का भी ध्यान रखें। पूरी जानकारी स्क्रीन पर उपलब्ध है।
 - ✅ form ended on the Dadar branch, tomorrow — Bastian - At The Top 2026-10-05 19:00-23:00
-- note: agent audio received: 1825191 bytes; formats {"in":"pcm_16000","out":"pcm_16000"}
+- note: agent audio received: 1595226 bytes; formats {"in":"pcm_16000","out":"pcm_16000"}
 
 ## 4b. Marathi voice conversation with the ElevenLabs agent (ambiguous venue)
 
 **PASS**
 
-- ✅ agent ASR transcribed mr speech — उद्या संध्याकाळी सात वाजता Bastion ला जायचं आहे. अकरा वाजेपर्यंत परत येईन. मला AC मध्ये थंडी वाजते. || दादरचं, बास्टियन - ॲट द टॉप. || हो, बरोबर आहे.
-- ✅ agent called set_outing_details with the venue in Latin letters (spelling variants matched by the backend) — {"destination":"Bastion","date":"2026-10-05","departure_time":"19:00","return_time":"23:00","feels_cold_in_ac":true}
+- ✅ agent ASR transcribed mr speech — उद्या संध्याकाळी सात वाजता बास्टियनला जायचं आहे. अकरा वाजेपर्यंत परत येईन. मला AC मध्ये थंडी वाजते. || दादरचं, बास्टियन एट द टॉप. || हो, बरोबर आहे.
+- ✅ agent called set_outing_details with the venue in Latin letters (spelling variants matched by the backend) — {"destination":"Bastian","date":"2026-10-05","departure_time":"19:00","return_time":"23:00","feels_cold_in_ac":true}
 - ✅ backend reported the venue as ambiguous to the agent — {"destination_status":"ambiguous","destination":null,"destination_options":["1. Bastian - At The Top — Kohinoor Square, Dadar West · forecast point: Dadar West","2. Bastian (Bandra West) — Linking Roa
 - ✅ agent asked and called choose_destination — [{"choice":"1"}]
 - ✅ agent confirmed date/times before advice was fetched — set_outing_details → choose_destination → confirm_details
-- ✅ agent spoke the backend summary (agreement ≥ 85%) — agreement 100%<br>      summary: बाहेर ३३.७°C तापमान आणि ८४% आर्द्रता असल्याने सुती आणि सैल कपडे वापरा. तुम्हाला एसीमध्ये थंडी वाजते, म्हणून एक हलकी लेयर सोबत ठेवा. तसेच, तिथे एसी आहे का आणि कार तुम्हाला छताखाली सोडू शकते का, याची खात्री करून घ्या.<br>      agent said: बाहेर तेहतीस पूर्णांक सात अंश सेल्सिअस तापमान आणि चौऱ्याऐंशी टक्के आर्द्रता असल्याने सुती आणि सैल कपडे वापरा. तुम्हाला एसीमध्ये थंडी वाजते, म्हणून एक हलकी लेयर सोबत ठेवा. तसेच, तिथे एसी आहे का आणि कार तुम्हाला छताखाली सोडू शकते का, याची खात्री करून घ्या. पूर्ण माहिती तुमच्या स्क्रीनवर आहे.
+- ✅ agent spoke the backend summary (agreement ≥ 85%) — agreement 100%<br>      summary: बाहेर ३३.७°C तापमान आणि ८४% आर्द्रता असल्याने सुती आणि सैल कपडे वापरा. तुम्हाला एसीमध्ये थंडी वाजते, म्हणून एक हलकी लेयर सोबत ठेवा. कृपया वेन्यूमध्ये एसी आहे का आणि कार छताखाली उतरू शकते का ते तपासा.<br>      agent said: बाहेर तेहतीस पूर्णांक सात अंश सेल्सिअस तापमान आणि चौऱ्याऐंशी टक्के आर्द्रता असल्याने सुती आणि सैल कपडे वापरा. तुम्हाला एसीमध्ये थंडी वाजते, म्हणून एक हलकी लेयर सोबत ठेवा. कृपया वेन्यूमध्ये एसी आहे का आणि कार छताखाली उतरू शकते का ते तपासा. पूर्ण माहिती तुम्हाला स्क्रीनवर दिसेल.
 - ✅ form ended on the Dadar branch, tomorrow — Bastian - At The Top 2026-10-05 19:00-23:00
-- note: agent audio received: 1722927 bytes; formats {"in":"pcm_16000","out":"pcm_16000"}
+- note: agent audio received: 1612851 bytes; formats {"in":"pcm_16000","out":"pcm_16000"}
 
 ## 5. Weather API failure
 
 **PASS**
 
-- ✅ baseline live fetch — live @ 2026-10-04T13:00:58.012Z
+- ✅ baseline live fetch — live @ 2026-10-04T13:42:54.678Z
 - ✅ outage with recent cache → STALE label, retrieval time shown, not live — Live forecast unavailable (Simulated weather provider outage (test scenario)). Showing the forecast retrieved 0 min ago — not live.
 - ✅ outage without cache → weather unavailable, no weather-based items — Weather unavailable: Simulated weather provider outage (test scenario). No cached forecast is recent enough to use, so no weather-based advice is given.; items: check.weather_unavailable, check.drop_off_cover, check.waterlogging
 - ✅ inputs preserved in the response — Powai 18:00-21:00

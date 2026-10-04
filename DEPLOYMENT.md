@@ -1,78 +1,63 @@
-# OutingFit — Render Deployment Guide & Architecture
+# Deploying OutingFit to Render
 
-This guide details the deployment of **OutingFit** to [Render](https://render.com) using its official Web Service and Blueprint specifications.
+OutingFit runs as **one Render Node web service**: Express serves the built React app and the `/api/v2` API, and all API keys stay on the server. The browser only ever receives short-lived ElevenLabs conversation tokens. See [README.md](README.md) for how the pipeline works.
 
----
+`render.yaml` is a [Render Blueprint](https://render.com/docs/blueprint-spec) that sets up the service:
 
-## 1. Architecture
+| Setting | Value | Why |
+|---|---|---|
+| Region | `singapore` | Closest Render region to Mumbai |
+| Build | `npm ci --include=dev && npm run build` | The Vite/Tailwind build needs dev dependencies; `NODE_ENV=production` would otherwise skip them |
+| Start | `npm start` | `NODE_ENV=production tsx server.ts`, which serves `dist/` |
+| Health check | `/healthz` | |
+| Node | `22.14.0` | Install, build and run checked on this version |
+| Plan | `starter` | Free instances spin down when idle; the first request after that takes a long time, which breaks voice-tool timeouts |
 
-See [README.md](README.md) for the current pipeline (ElevenLabs voice → confirmed outing form → Open-Meteo → decision rules → Gemma → validated cards + spoken summary). Everything runs in one Render Node web service; API keys stay server-side.
+## 1. Before you start
 
-On Render, set `OLLAMA_URL=off` (no local Ollama) so Gemma runs only on the Gemini API (`gemma-4-31b-it`). If Gemma fails, the cards show the rule engine's English wording with a visible notice — no output is attributed to Gemma unless Gemma produced it.
+You need the values from your working local `.env`:
 
-## 2. Configuration & Secret Handling
+- `GEMINI_API_KEY`
+- `ELEVENLABS_API_KEY`
+- `ELEVENLABS_AGENT_ID` and `ELEVENLABS_AGENT_ID_MR`, both created by `npm run setup:agent`
+- `ELEVENLABS_VOICE_ID`
 
-### Environment Variables Matrix
+The ElevenLabs agents live in your ElevenLabs account, not on Render. The deployed app uses the same two agents as your local one, so don't run `setup:agent` again for Render.
 
-| Variable | Type | Default | Required on Render | Purpose |
-| :--- | :--- | :--- | :--- | :--- |
-| `NODE_ENV` | String | `production` | Yes | Runs Express in production mode, serving pre-built Vite assets |
-| `NODE_VERSION` | String | `22.14.0` | Yes | Specifies Node.js LTS engine on Render |
-| `PORT` | Number | `10000` | Auto-injected | Render automatically assigns the public port |
-| `GEMINI_API_KEY` | Secret | None | Yes | API key for Gemma / Gemini inference via `@google/genai` |
-| `WEATHER_API_TIMEOUT_MS` | Number | `5000` | Optional | AbortController timeout threshold for external Open-Meteo calls |
-| `INFERENCE_TIMEOUT_MS` | Number | `30000` | Optional | SLA timeout threshold before engaging fallback engine |
-| `APP_URL` | URL | Service URL | Optional | Public canonical domain of the Render deployment |
-| `ELEVENLABS_API_KEY`, `ELEVENLABS_AGENT_ID`, `ELEVENLABS_VOICE_ID`, `ELEVENLABS_AGENT_LANG_*` | Secret | None | For voice | See `.env.example`; IDs come from `npm run setup:agent` |
-| `OLLAMA_URL` | String | `off` on Render | Yes | Disables the local Gemma fallback |
+## 2. Create the service (Blueprint)
 
-> **Security Rule**: `GEMINI_API_KEY` must **never** be committed to Git or hardcoded in `render.yaml`. In `render.yaml`, it is flagged with `sync: false`, requiring it to be populated directly in the Render Dashboard under **Environment Secrets**.
+1. Push to GitHub. `render.yaml` must be on the branch Render deploys from (`main`).
+2. In the [Render Dashboard](https://dashboard.render.com): **New → Blueprint**, then pick the `supermanyu90/OutingFit` repository.
+3. Render reads `render.yaml` and asks for every `sync: false` value. Paste:
+   - `GEMINI_API_KEY`
+   - `ELEVENLABS_API_KEY`
+   - `ELEVENLABS_AGENT_ID` (the main agent: English + Hindi)
+   - `ELEVENLABS_AGENT_ID_MR` (the Marathi agent)
+   - `ELEVENLABS_VOICE_ID`
+   - `SERPAPI_API_KEY` and `SENTRY_DSN` are optional; leave them blank if unused.
+4. **Apply.** Render builds and deploys. Later pushes to `main` redeploy automatically (`autoDeploy: true`).
 
----
+Everything else is already set in `render.yaml`:
+- `OLLAMA_URL=off`, so there's no local-Gemma fallback on Render.
+- `GEMMA_MODEL=gemma-4-26b-a4b-it` with `GEMMA_THINKING_LEVEL=minimal`.
+- The per-language agent flags (`ELEVENLABS_AGENT_LANG_*=ok`) and timeouts.
 
-## 3. Render Deployment Instructions
+> Never put keys in `render.yaml` or commit `.env`. Keys entered in the Dashboard are stored encrypted by Render.
 
-### Method A: Deploy via Render Blueprint (Recommended)
-1. Push this repository to GitHub or GitLab.
-2. Log in to [Render Dashboard](https://dashboard.render.com).
-3. Navigate to **Blueprints** → **New Blueprint Instance**.
-4. Select your OutingFit repository. Render will automatically read `render.yaml`.
-5. Under Environment Variables, input your secret `GEMINI_API_KEY`.
-6. Click **Apply**. Render will automatically provision:
-   - Build Command: `npm install && npm run build`
-   - Start Command: `npm start`
-   - Health Check Path: `/healthz`
+## 3. Verify before calling it live
 
-### Method B: Manual Web Service Creation
-1. In the Render Dashboard, click **New +** → **Web Service**.
-2. Connect your Git repository.
-3. Configure the following fields:
-   - **Name**: `outingfit-mumbai`
-   - **Environment**: `Node`
-   - **Region**: `Oregon` or `Singapore` (closest to Mumbai users)
-   - **Branch**: `main`
-   - **Build Command**: `npm install && npm run build`
-   - **Start Command**: `npm start`
-   - **Plan**: `Starter` (or `Free`)
-4. Click **Advanced** and configure:
-   - **Health Check Path**: `/healthz`
-5. Add Environment Variables:
-   - `NODE_ENV`: `production`
-   - `NODE_VERSION`: `22.14.0`
-   - `GEMINI_API_KEY`: *(Your Google AI Studio API Key)*
-   - `WEATHER_API_TIMEOUT_MS`: `5000`
-   - `INFERENCE_TIMEOUT_MS`: `30000`
-6. Click **Create Web Service**.
-
----
-
-## 4. Verification checklist (post-deployment)
-
-1. `curl -i https://<app>.onrender.com/healthz` → 200 with `inference.primary.model = gemma-4-31b-it` and `voice.agentConfigured = true`.
-2. Run the end-to-end scenarios against the deployment and keep the output:
+1. **Health:** `curl https://<app>.onrender.com/healthz` should return `"environment":"production"`, `inference.primary.model = gemma-4-26b-a4b-it`, and `voice.agentConfigured = true`.
+2. **End-to-end:** run the scenarios against the deployment:
    ```bash
    BASE=https://<app>.onrender.com npm run test:scenarios
    ```
-   Do not call the deployment live until scenarios 1–5 pass there (see `docs/TEST_RESULTS.md`).
-3. In a browser, open **Test scenarios → 5 · Weather provider failure** and confirm the weather panel shows **STALE — not live** (or **Unavailable**) and the inputs are preserved.
-4. Add the Render URL to the ElevenLabs agent's allowed hosts if you enable an allowlist.
+   This writes `docs/TEST_RESULTS.md`. Don't treat the deployment as live until scenarios 1–5 pass there.
+3. **In a browser:** on the deployed site, use **Talk** in each language once. Your browser will ask for microphone permission, which it only allows on HTTPS; Render provides HTTPS.
+4. **Optional hardening:** in the ElevenLabs dashboard, add your Render domain to each agent's allowed hosts. Both agents already require a server-issued token (`enable_auth: true`).
+
+## 4. Operational notes
+
+- **Gemma failures.** If the Gemini API is slow or overloaded, the app stops trying it for 2 minutes (`GEMINI_BREAKER_MS`). The cards then show the rule engine's English wording with a visible notice. Nothing is labelled as Gemma unless Gemma wrote it.
+- **Caches.** The forecast cache (10 min, served as **stale** for up to 3 h if Open-Meteo fails) is held in memory. It's reset on every deploy or restart, and isn't shared if you scale to multiple instances.
+- **Open-Meteo licence.** The free tier is **non-commercial only** (under 10,000 calls/day). A commercial launch needs an Open-Meteo API subscription; weather data must be credited to Open-Meteo under CC BY 4.0, as the app already does.
+- **Changing the agents.** After editing `scripts/agentConfig.ts`, run `npm run setup:agent` locally. It updates the same agents in place, so Render needs no change.
