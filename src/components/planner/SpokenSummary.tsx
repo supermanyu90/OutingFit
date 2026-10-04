@@ -60,7 +60,7 @@ export function SpokenSummary({ result, status, textOnly, autoPlay }: { result: 
   }, [textOnly]);
 
   return (
-    <section className="bg-slate-900 text-white rounded-2xl p-4 space-y-2" aria-label={t('spokenSummary', lang)}>
+    <section className="glass-dark text-white rounded-2xl p-4 space-y-2" aria-label={t('spokenSummary', lang)}>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="text-sm font-bold">{t('spokenSummary', lang)}</h3>
         {!textOnly && result.spoken.text && (

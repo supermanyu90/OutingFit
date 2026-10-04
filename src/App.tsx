@@ -91,8 +91,8 @@ export default function App() {
   const caps = status?.voice.languages[language];
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] text-[#1E293B] flex flex-col font-sans">
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200">
+    <div className="min-h-screen text-[#1E293B] flex flex-col font-sans">
+      <header className="sticky top-0 z-40 glass-nav">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center">
@@ -103,7 +103,7 @@ export default function App() {
               <span className="text-[11px] font-semibold text-slate-500">Mumbai outing planner</span>
             </div>
           </div>
-          <nav className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl" aria-label="Sections">
+          <nav className="flex items-center gap-1 glass-pill p-1 rounded-xl" aria-label="Sections">
             {(
               [
                 ['plan', 'Plan', <CalendarClock key="p" className="w-3.5 h-3.5" />],
@@ -115,7 +115,7 @@ export default function App() {
                 key={k}
                 onClick={() => setTab(k)}
                 aria-current={tab === k ? 'page' : undefined}
-                className={`px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 cursor-pointer ${tab === k ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'}`}
+                className={`px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 cursor-pointer ${tab === k ? 'bg-white/90 text-slate-900 shadow-xs ring-1 ring-white' : 'text-slate-600 hover:text-slate-900 hover:bg-white/40'}`}
               >
                 {icon}
                 <span className="hidden sm:inline">{label}</span>
@@ -128,14 +128,14 @@ export default function App() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-5 space-y-5">
         {/* Language + output mode */}
         <div className="flex flex-wrap items-center gap-3 justify-between">
-          <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-xl p-1" role="radiogroup" aria-label="Language">
+          <div className="flex items-center gap-1 glass rounded-xl p-1" role="radiogroup" aria-label="Language">
             {LANGUAGE_OPTIONS.map((l) => (
               <button
                 key={l.code}
                 role="radio"
                 aria-checked={language === l.code}
                 onClick={() => setLanguage(l.code)}
-                className={`px-3 py-1.5 rounded-lg text-sm font-semibold cursor-pointer ${language === l.code ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100'}`}
+                className={`px-3 py-1.5 rounded-lg text-sm font-semibold cursor-pointer ${language === l.code ? 'bg-slate-900/90 text-white' : 'text-slate-700 hover:bg-white/50'}`}
               >
                 {l.native}
               </button>
@@ -191,7 +191,7 @@ export default function App() {
                   <WaterloggingPanel status={s.result.waterlogging} />
                 </>
               ) : (
-                <div className="bg-white border border-dashed border-slate-300 rounded-2xl p-8 text-center text-sm text-slate-500">
+                <div className="glass rounded-2xl p-8 text-center text-sm text-slate-600">
                   Tell OutingFit where and when you're going (talk, dictate, type, or fill the form). Weather is fetched only after the place and times are confirmed.
                   {caps && !caps.agent.supported && caps.agent.supported !== null && (
                     <p className="mt-2 text-xs text-amber-800">Voice conversation is not available in this language: {caps.agent.note}</p>
@@ -215,7 +215,7 @@ export default function App() {
         )}
       </main>
 
-      <footer className="border-t border-slate-200 bg-white py-4 text-[11px] text-slate-500">
+      <footer className="glass-nav border-t border-white/70 py-4 text-[11px] text-slate-600">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row gap-2 justify-between">
           <span>
             Recommendations: OutingFit decision rules + Gemma ({status?.gemma.primary?.model ?? status?.gemma.fallback?.model ?? '—'}). Voice: ElevenLabs. Weather:{' '}

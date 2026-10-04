@@ -45,12 +45,12 @@ export function WardrobePanel({
   const shown = wardrobe.families.filter((f) => family === 'all' || f.family === family);
 
   return (
-    <section className="bg-white rounded-2xl border border-slate-200 p-4 space-y-3" aria-label="Wardrobe ideas">
+    <section className="glass rounded-2xl p-4 space-y-3" aria-label="Wardrobe ideas">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
           <Shirt className="w-4 h-4 text-amber-600" /> Wardrobe ideas
         </h3>
-        <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-0.5" role="radiogroup" aria-label="Dress level">
+        <div className="flex items-center gap-1 glass-pill rounded-lg p-0.5" role="radiogroup" aria-label="Dress level">
           {LEVELS.map((l) => (
             <button
               key={l.value}
@@ -59,7 +59,7 @@ export function WardrobePanel({
               disabled={loading}
               onClick={() => wardrobe.formality !== l.value && onChangeFormality(l.value)}
               className={`px-2.5 py-1 rounded-md text-[11px] font-semibold cursor-pointer disabled:cursor-wait ${
-                wardrobe.formality === l.value ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                wardrobe.formality === l.value ? 'bg-white/90 text-slate-900 shadow-xs ring-1 ring-white' : 'text-slate-600 hover:text-slate-900 hover:bg-white/40'
               }`}
             >
               {l.label}
@@ -80,7 +80,7 @@ export function WardrobePanel({
             aria-selected={family === f.family}
             onClick={() => setFamily(f.family)}
             className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border cursor-pointer ${
-              family === f.family ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-700 border-slate-200 hover:border-slate-400'
+              family === f.family ? 'bg-slate-900/90 text-white border-slate-900' : 'glass-subtle text-slate-700 hover:bg-white/60'
             }`}
           >
             {f.label}
@@ -93,7 +93,7 @@ export function WardrobePanel({
           {family === 'all' && <h4 className="text-xs font-bold text-slate-700">{f.label}</h4>}
           <ul className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-2">
             {f.ideas.map((idea) => (
-              <li key={idea.id} className={`rounded-xl border p-3 space-y-1.5 ${owned[idea.id] ? 'border-emerald-300 bg-emerald-50/40' : 'border-slate-200'}`}>
+              <li key={idea.id} className={`rounded-xl border p-3 space-y-1.5 ${owned[idea.id] ? 'border-emerald-300/80 bg-emerald-50/60 backdrop-blur-sm' : 'glass-subtle'}`}>
                 <div className="flex items-start justify-between gap-2">
                   <p className="text-sm font-semibold text-slate-900 leading-snug" lang={language}>
                     {idea.name}

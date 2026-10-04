@@ -258,7 +258,7 @@ async function main() {
         turns,
         tools: session.clientTools(),
         doneWhen: (ev) => {
-          const i = ev.findIndex((e) => e.type === 'tool_result' && e.tool === 'get_outing_advice' && /"status":"ok"/.test(e.result || ''));
+          const i = ev.findIndex((e) => e.type === 'tool_result' && /"status":"ok"/.test(e.result || '') && /spoken_summary/.test(e.result || ''));
           return i >= 0 && ev.slice(i).some((e) => e.type === 'agent_response');
         },
         timeoutMs: 240000,
@@ -274,9 +274,22 @@ async function main() {
       const ambiguousResult = ev.find((e) => e.type === 'tool_result' && /"destination_status":"ambiguous"/.test(e.result || ''));
       r.checks.push({ name: 'backend reported the venue as ambiguous to the agent', pass: !!ambiguousResult, detail: ambiguousResult?.result?.slice(0, 200) || '' });
       r.checks.push({ name: 'agent asked and called choose_destination', pass: calls.some((c) => c.tool === 'choose_destination'), detail: JSON.stringify(calls.filter((c) => c.tool === 'choose_destination').map((c) => c.params)) });
-      r.checks.push({ name: 'agent confirmed date/times before fetching', pass: calls.findIndex((c) => c.tool === 'confirm_details') >= 0 && calls.findIndex((c) => c.tool === 'confirm_details') < calls.findIndex((c) => c.tool === 'get_outing_advice'), detail: calls.map((c) => c.tool).join(' → ') });
-      const adviceIdx = ev.findIndex((e) => e.type === 'tool_result' && e.tool === 'get_outing_advice' && /"status":"ok"/.test(e.result || ''));
-      const summary = adviceIdx >= 0 ? JSON.parse(ev[adviceIdx].result!).spoken_summary : null;
+      // Advice may come back inside confirm_details/choose_destination (advice.spoken_summary)
+      // or from an explicit get_outing_advice call.
+      const adviceOf = (e: AgentEvent) => {
+        if (e.type !== 'tool_result') return null;
+        try {
+          const j = JSON.parse(e.result || '{}');
+          const a = j.advice ?? (e.tool === 'get_outing_advice' ? j : null);
+          return a?.status === 'ok' ? (a.spoken_summary as string) : null;
+        } catch {
+          return null;
+        }
+      };
+      const confirmIdx = ev.findIndex((e) => e.type === 'tool_call' && e.tool === 'confirm_details');
+      const adviceIdx = ev.findIndex((e) => adviceOf(e) !== null);
+      r.checks.push({ name: 'agent confirmed date/times before advice was fetched', pass: confirmIdx >= 0 && adviceIdx > confirmIdx, detail: calls.map((c) => c.tool).join(' → ') });
+      const summary = adviceIdx >= 0 ? adviceOf(ev[adviceIdx]) : null;
       const said = adviceIdx >= 0 ? ev.slice(adviceIdx).find((e) => e.type === 'agent_response')?.text : undefined;
       const score = summary && said ? spokenAgreement(said, summary) : 0;
       r.checks.push({ name: 'agent spoke the backend summary (agreement ≥ 85%)', pass: score >= 0.85, detail: `agreement ${(score * 100).toFixed(0)}%\n      summary: ${summary}\n      agent said: ${said}` });

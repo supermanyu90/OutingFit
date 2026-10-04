@@ -53,7 +53,7 @@ const PRIORITY: Record<CardItem['priority'], string> = {
 
 function Item({ item, lang, owned, onOwned }: { item: CardItem; lang: Language; owned: boolean; onOwned: (v: boolean) => void }) {
   return (
-    <li className={`rounded-xl border p-3 space-y-1.5 ${owned ? 'border-emerald-300 bg-emerald-50/40' : 'border-slate-200 bg-white'}`}>
+    <li className={`rounded-xl border p-3 space-y-1.5 ${owned ? 'border-emerald-300/80 bg-emerald-50/60 backdrop-blur-sm' : 'glass-subtle'}`}>
       <div className="flex items-start justify-between gap-2">
         <p className="text-sm font-semibold text-slate-900 leading-snug">{item.title}</p>
         <span className={`text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded shrink-0 ${PRIORITY[item.priority]}`}>{item.priority}</span>
@@ -116,7 +116,7 @@ export function RecommendationCards({ result }: { result: OutingResult }) {
 
   return (
     <section className="space-y-3" aria-label="Recommendations">
-      {result.outfitSummary && <p className="text-sm text-slate-800 bg-white border border-slate-200 rounded-2xl px-4 py-3">{result.outfitSummary}</p>}
+      {result.outfitSummary && <p className="text-sm text-slate-800 glass rounded-2xl px-4 py-3">{result.outfitSummary}</p>}
       {!result.gemma.used && (
         <p className="text-xs bg-amber-50 border border-amber-300 text-amber-950 rounded-xl px-3 py-2">
           Gemma did not return validated text ({result.gemma.error}). Items below are the rule engine's own wording, in English.
@@ -124,7 +124,7 @@ export function RecommendationCards({ result }: { result: OutingResult }) {
       )}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
         {cards.map(({ key, icon }) => (
-          <div key={key} className="bg-slate-50 rounded-2xl border border-slate-200 p-3 space-y-2">
+          <div key={key} className="glass rounded-2xl p-3 space-y-2">
             <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
               {icon} {t(key, lang)}
             </h3>

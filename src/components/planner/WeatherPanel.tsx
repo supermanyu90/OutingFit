@@ -39,7 +39,7 @@ export function WeatherPanel({ weather }: { weather: W }) {
   }
 
   return (
-    <section className="bg-white rounded-2xl border border-slate-200 p-4 space-y-3" aria-label="Weather for your outing">
+    <section className="glass rounded-2xl p-4 space-y-3" aria-label="Weather for your outing">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
           <CloudSun className="w-4 h-4 text-amber-600" /> Weather for the outing window
@@ -120,7 +120,7 @@ export function WeatherPanel({ weather }: { weather: W }) {
             </thead>
             <tbody>
               {rows.map((r) => (
-                <tr key={r.label} className="border-t border-slate-100">
+                <tr key={r.label} className="border-t border-white/60">
                   <th scope="row" className="px-1 py-1.5 font-semibold text-slate-800">
                     {r.label}
                     <span className="block font-normal text-slate-500">{r.valid}</span>

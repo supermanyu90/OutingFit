@@ -66,7 +66,7 @@ export const SerpApiDiscovery: React.FC<SerpApiDiscoveryProps> = ({
   return (
     <div className="space-y-6">
       {/* Top Banner & Search Query Engine */}
-      <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-xs space-y-5">
+      <div className="glass rounded-3xl p-6 shadow-xs space-y-5">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold text-indigo-700 uppercase tracking-wider mb-1">
             <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
@@ -244,7 +244,7 @@ export const SerpApiDiscovery: React.FC<SerpApiDiscoveryProps> = ({
             {discoveryResult.shortlist.map((item) => (
               <div
                 key={item.id}
-                className="bg-white rounded-3xl border border-slate-200 p-6 shadow-xs hover:border-slate-300 transition-all space-y-5"
+                className="glass rounded-3xl p-6 shadow-xs hover:border-slate-300 transition-all space-y-5"
               >
                 {/* Header Row */}
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 pb-3 border-b border-slate-100">

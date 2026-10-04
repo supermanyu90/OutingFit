@@ -139,7 +139,7 @@ export function ScenarioLab({ scenarios, onRun, running }: { scenarios: Scenario
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {scenarios.map((s) => (
-          <div key={s.id} className="bg-white rounded-2xl border border-slate-200 p-4 space-y-2">
+          <div key={s.id} className="glass rounded-2xl p-4 space-y-2">
             <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
               {s.icon} {s.title}
             </h3>

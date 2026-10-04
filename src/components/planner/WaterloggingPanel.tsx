@@ -5,7 +5,7 @@ import type { OutingResult } from '../../api';
 /** Waterlogging is shown separately from rain: a rain forecast cannot establish road flooding. */
 export function WaterloggingPanel({ status }: { status: OutingResult['waterlogging'] }) {
   return (
-    <section className="bg-white rounded-2xl border border-slate-200 p-4 space-y-2" aria-label="Waterlogging status">
+    <section className="glass rounded-2xl p-4 space-y-2" aria-label="Waterlogging status">
       <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
         <Waves className="w-4 h-4 text-sky-700" /> Waterlogging (separate from the rain forecast)
       </h3>
@@ -21,7 +21,7 @@ export function WaterloggingPanel({ status }: { status: OutingResult['waterloggi
           <p className="text-xs text-violet-900 bg-violet-50 border border-violet-200 rounded-lg px-2.5 py-1.5">{status.message}</p>
           <ul className="space-y-1.5">
             {status.reports.map((r, i) => (
-              <li key={i} className="text-xs text-slate-800 border border-slate-200 rounded-lg px-3 py-2">
+              <li key={i} className="text-xs text-slate-800 glass-subtle rounded-lg px-3 py-2">
                 <strong>{r.location}</strong> — {r.description}
                 <span className="block text-[11px] text-slate-500">
                   Source: {r.source} · reported {r.ageMinutes} min ago ({new Date(r.reportedAt).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit' })} IST)

@@ -15,7 +15,7 @@ interface Props {
   onSubmit: () => void;
 }
 
-const field = 'w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900';
+const field = 'w-full rounded-xl glass-input px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900';
 const label = 'block text-[11px] font-semibold text-slate-600 mb-1';
 
 function humanDate(date: string) {
@@ -32,7 +32,7 @@ export function OutingFormPanel({ form, language, ready, loading, onUpdate, onRe
   const returnsNextDay = form.departure && form.return && form.return <= form.departure;
 
   return (
-    <section className="bg-white rounded-2xl border border-slate-200 p-4 space-y-4" aria-label="Outing details">
+    <section className="glass rounded-2xl p-4 space-y-4" aria-label="Outing details">
       {/* Destination */}
       <div>
         <label htmlFor="dest" className={label}>
@@ -51,7 +51,7 @@ export function OutingFormPanel({ form, language, ready, loading, onUpdate, onRe
           </button>
         </form>
         {form.destinationStatus === 'ambiguous' && (
-          <div className="mt-2 rounded-xl border-2 border-amber-300 bg-amber-50 p-3 space-y-2" role="group" aria-label="Choose the destination">
+          <div className="mt-2 rounded-xl border border-amber-300/80 bg-amber-50/70 backdrop-blur-sm p-3 space-y-2" role="group" aria-label="Choose the destination">
             <p className="text-xs font-semibold text-amber-900 flex items-center gap-1.5">
               <AlertTriangle className="w-3.5 h-3.5" /> {form.destinationMessage}
             </p>
@@ -59,7 +59,7 @@ export function OutingFormPanel({ form, language, ready, loading, onUpdate, onRe
               <button
                 key={c.id}
                 onClick={() => onChoose(c.id)}
-                className="w-full text-left rounded-lg bg-white border border-amber-200 hover:border-amber-500 px-3 py-2 cursor-pointer"
+                className="w-full text-left rounded-lg glass-subtle hover:border-amber-500 px-3 py-2 cursor-pointer"
               >
                 <span className="block text-sm font-semibold text-slate-900">{c.destination.name}</span>
                 <span className="block text-[11px] text-slate-500">{c.subtitle}</span>
@@ -103,7 +103,7 @@ export function OutingFormPanel({ form, language, ready, loading, onUpdate, onRe
       </div>
 
       {!form.scheduleConfirmed && form.date && form.departure && form.return && (
-        <div className="rounded-xl border-2 border-sky-300 bg-sky-50 p-3 space-y-2">
+        <div className="rounded-xl border border-sky-300/80 bg-sky-50/70 backdrop-blur-sm p-3 space-y-2">
           <p className="text-xs text-sky-950">
             Please confirm: <strong>{humanDate(form.date)}</strong>, leaving <strong>{form.departure}</strong>, back by <strong>{form.return}</strong>
             {returnsNextDay ? ' (next day)' : ''} — Asia/Kolkata.

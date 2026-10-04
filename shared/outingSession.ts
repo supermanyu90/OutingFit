@@ -81,7 +81,7 @@ export function readiness(f: OutingForm): { ready: boolean; missing: string[] } 
 
 /** Explicit instruction for the voice agent, so it doesn't stall between steps. */
 function nextStep(f: OutingForm, ready: boolean, missing: string[]): string {
-  if (ready) return 'Call get_outing_advice now, then read its spoken_summary aloud word for word.';
+  if (ready) return 'If this result contains advice.spoken_summary, read it aloud word for word now. Otherwise call get_outing_advice.';
   if (f.destinationStatus === 'ambiguous') return 'Read destination_options to the user and call choose_destination with their choice.';
   if (f.destinationStatus === 'not_found') return 'Ask the user for a nearby Mumbai locality, then call set_outing_details.';
   if (missing.includes('confirmation of date and times')) return 'Read the date, departure and return times back to the user; when they agree, call confirm_details.';
@@ -261,7 +261,7 @@ export class OutingSession {
   }
 
   /** Tool: choose_destination — choice is an option number or (part of) a name. */
-  chooseDestination(p: Record<string, unknown>): string {
+  async chooseDestination(p: Record<string, unknown>): Promise<string> {
     const choice = String(p.choice ?? '').trim();
     const opts = this.form.candidates;
     let picked: DestinationCandidate | undefined;
@@ -274,15 +274,26 @@ export class OutingSession {
     }
     if (!picked) return this.snapshot({ error: `Could not match "${choice}" to exactly one option; ask the user again.` });
     this.chooseCandidate(picked.id);
-    return this.snapshot();
+    return this.adviceIfReady();
   }
 
   /** Tool: confirm_details — call only after reading the date and times back and hearing the user agree. */
-  confirmDetails(): string {
+  async confirmDetails(): Promise<string> {
     const f = this.form;
     if (!f.date || !f.departure || !f.return) return this.snapshot({ error: 'Date, departure and return time are needed before confirming.' });
     this.update({ scheduleConfirmed: true, scheduleNotes: [] });
-    return this.snapshot();
+    return this.adviceIfReady();
+  }
+
+  /**
+   * Once everything is confirmed, fetch the advice in the same tool call. The
+   * agent LLM was observed announcing "getting your advice" and then never
+   * calling get_outing_advice, so the chain no longer depends on it.
+   */
+  private async adviceIfReady(): Promise<string> {
+    if (!readiness(this.form).ready) return this.snapshot();
+    const advice = JSON.parse(await this.getOutingAdvice());
+    return this.snapshot({ advice });
   }
 
   /** Tool: get_outing_advice — returns the backend's validated spoken summary (or why there is none). */
@@ -328,22 +339,35 @@ export class OutingSession {
 
 /**
  * How much of the backend summary the agent actually said: share of the
- * summary's character bigrams present in the agent's utterance (0–1). The
- * agent may append "the full cards are on screen", so this measures recall of
- * the summary rather than symmetric similarity.
+ * summary's character bigrams present in the agent's utterance (0–1).
+ *
+ * Measured on the advice words only. Digits, units and Latin-script names are
+ * removed from the summary first, because a voice agent legitimately says
+ * "33.7°C" as "तैंतीस दशमलव सात डिग्री" and writes "Bastian" as "बैस्टियन".
+ * Recall (not symmetric similarity) is used because the agent may append
+ * "the full cards are on screen".
  */
 export function spokenAgreement(spoken: string, summary: string): number {
   const norm = (s: string) => s.normalize('NFC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+  const devanagari = /[\u0900-\u097F]/.test(summary);
+  const adviceOnly = (s: string) =>
+    norm(
+      s
+        .replace(/[0-9०-९]+(?:[.,][0-9०-९]+)?\s*(?:°\s*c|%|mm|km\/h)?/gi, ' ')
+        // In Hindi/Marathi summaries, Latin words are names/brands the agent may transliterate.
+        .replace(devanagari ? /[A-Za-z][A-Za-z'’\-]*/g : /$^/g, ' ')
+    );
   const grams = (s: string) => {
     const m = new Map<string, number>();
     for (let i = 0; i < s.length - 1; i++) {
       const g = s.slice(i, i + 2);
+      if (g.includes(' ') && g.trim().length < 2) continue;
       m.set(g, (m.get(g) || 0) + 1);
     }
     return m;
   };
   const said = grams(norm(spoken));
-  const want = grams(norm(summary));
+  const want = grams(adviceOnly(summary));
   let hit = 0;
   let total = 0;
   for (const [g, n] of want) {

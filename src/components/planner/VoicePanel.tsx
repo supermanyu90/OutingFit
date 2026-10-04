@@ -244,7 +244,7 @@ function VoicePanelInner({
       disabled={disabled}
       title={title}
       className={`flex-1 px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 border transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 ${
-        mode === m ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-700 border-slate-200 hover:border-slate-400'
+        mode === m ? 'bg-slate-900/90 text-white border-slate-900' : 'glass-subtle text-slate-700 hover:bg-white/60'
       }`}
     >
       {icon}
@@ -253,7 +253,7 @@ function VoicePanelInner({
   );
 
   return (
-    <section className="bg-white rounded-2xl border border-slate-200 p-4 space-y-3" aria-label="Tell OutingFit about your outing">
+    <section className="glass rounded-2xl p-4 space-y-3" aria-label="Tell OutingFit about your outing">
       <div className="flex gap-2">
         <ModeButton
           m="agent"
@@ -298,14 +298,14 @@ function VoicePanelInner({
                 <button
                   onClick={() => setMicMuted(!micMuted)}
                   aria-pressed={micMuted}
-                  className="px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold flex items-center gap-1.5 cursor-pointer hover:border-slate-400"
+                  className="px-3 py-2 rounded-xl glass-subtle text-xs font-semibold flex items-center gap-1.5 cursor-pointer hover:bg-white/60"
                 >
                   {micMuted ? <MicOff className="w-3.5 h-3.5 text-rose-600" /> : <Mic className="w-3.5 h-3.5" />} {micMuted ? 'Unmute mic' : 'Mute mic'}
                 </button>
                 <button
                   onClick={toggleAgentVoice}
                   aria-pressed={agentMutedOut}
-                  className="px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold flex items-center gap-1.5 cursor-pointer hover:border-slate-400"
+                  className="px-3 py-2 rounded-xl glass-subtle text-xs font-semibold flex items-center gap-1.5 cursor-pointer hover:bg-white/60"
                 >
                   {agentMutedOut ? <VolumeX className="w-3.5 h-3.5 text-rose-600" /> : <Volume2 className="w-3.5 h-3.5" />} {agentMutedOut ? 'Unmute agent' : 'Mute agent'}
                 </button>
@@ -336,7 +336,7 @@ function VoicePanelInner({
       )}
 
       {/* Transcript */}
-      <div className="rounded-xl bg-slate-50 border border-slate-200 p-3 max-h-56 overflow-y-auto space-y-1.5" aria-live="polite" aria-label="Transcript">
+      <div className="rounded-xl glass-subtle p-3 max-h-56 overflow-y-auto space-y-1.5" aria-live="polite" aria-label="Transcript">
         {lines.length === 0 ? (
           <p className="text-[11px] text-slate-400 flex items-center gap-1.5">
             <MessageSquareText className="w-3.5 h-3.5" /> Transcript appears here.
@@ -375,7 +375,7 @@ function VoicePanelInner({
                 ? 'उदा: उद्या संध्याकाळी 7 वाजता बास्टियनला जायचं आहे, 11 पर्यंत परत'
                 : 'e.g. Lunch at Olive in Bandra tomorrow 12:30 to 3:30, some walking, I get cold in AC'
           }
-          className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
+          className="w-full rounded-xl glass-input px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
         />
         <button
           onClick={useText}

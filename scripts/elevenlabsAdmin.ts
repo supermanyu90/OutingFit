@@ -105,6 +105,8 @@ export function runAgentConversation(opts: AgentRunOptions): Promise<{ events: A
     const events: AgentEvent[] = [];
     const t0 = Date.now();
     let audioBytes = 0;
+    /** A real user waits while a tool runs; don't speak over a pending call. */
+    let toolsInFlight = 0;
     /** When the agent's audio would finish playing on a real client (audio arrives faster than real time). */
     let playbackEndsAt = 0;
     let bytesPerSecond = 32000; // pcm_16000 s16le mono; updated from metadata
@@ -203,7 +205,7 @@ export function runAgentConversation(opts: AgentRunOptions): Promise<{ events: A
           {
             const waitForQuiet = () => {
               if (finished) return;
-              if (opts.textOnly || Date.now() > playbackEndsAt + 700) void sendNextTurn();
+              if (toolsInFlight === 0 && (opts.textOnly || Date.now() > playbackEndsAt + 700)) void sendNextTurn();
               else setTimeout(waitForQuiet, 250);
             };
             setTimeout(waitForQuiet, opts.textOnly ? 200 : 1000);
@@ -215,6 +217,7 @@ export function runAgentConversation(opts: AgentRunOptions): Promise<{ events: A
         case 'client_tool_call': {
           const { tool_name, tool_call_id, parameters } = data.client_tool_call;
           push({ type: 'tool_call', tool: tool_name, params: parameters });
+          toolsInFlight++;
           let result: string;
           let isError = false;
           try {
@@ -225,6 +228,7 @@ export function runAgentConversation(opts: AgentRunOptions): Promise<{ events: A
             result = err.message;
             isError = true;
           }
+          toolsInFlight--;
           push({ type: 'tool_result', tool: tool_name, result });
           ws.send(JSON.stringify({ type: 'client_tool_result', tool_call_id, result, is_error: isError }));
           break;

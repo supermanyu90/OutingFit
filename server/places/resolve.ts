@@ -114,7 +114,10 @@ export async function resolveDestination(query: string, timeoutMs: number): Prom
   // A locality hit that is only the forecast point of a single matched venue adds no ambiguity.
   const venues = candidates.filter((c) => c.source === 'registry');
   const places = candidates.filter((c) => c.source === 'geonames');
-  const final = venues.length > 0 && places.every((p) => foldName(p.destination.name) !== foldName(q)) ? venues : candidates;
+  // An exact locality name ("Juhu") means the locality — not venues located there or
+  // prefix matches like "Juhu Island". With no exact locality, venues take priority.
+  const exactPlaces = places.filter((p) => foldName(p.destination.name) === foldName(q));
+  const final = exactPlaces.length > 0 ? exactPlaces : venues.length > 0 ? venues : candidates;
 
   if (final.length === 0) {
     return {

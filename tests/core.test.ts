@@ -264,13 +264,13 @@ test('agent tools normalise times and require confirmation before advice', async
   assert.ok(snap.missing.includes('confirmation of date and times'));
   assert.equal(JSON.parse(await s.getOutingAdvice()).status, 'not_ready');
   s.update({ destination: { kind: 'place', name: 'Juhu', forecastPoint: { label: 'Juhu', lat: 19.1, lon: 72.82 } }, destinationStatus: 'resolved' });
-  JSON.parse(s.confirmDetails());
+  await s.confirmDetails();
   assert.equal(readiness(s.form).ready, true);
   await s.setOutingDetails({ return_time: '23:30' });
   assert.equal(s.form.scheduleConfirmed, false, 'changing a time requires re-confirmation');
 });
 
-test('choose_destination accepts option numbers and names', () => {
+test('choose_destination accepts option numbers and names', async () => {
   const s = new OutingSession('http://x', 'en');
   const mk = (id: string, name: string, sub: string) => ({
     id,
@@ -279,17 +279,36 @@ test('choose_destination accepts option numbers and names', () => {
     source: 'registry' as const,
   });
   s.update({ destinationStatus: 'ambiguous', candidates: [mk('a', 'Bastian - At The Top', 'Dadar West'), mk('b', 'Bastian (Bandra West)', 'Bandra')] });
-  assert.equal(JSON.parse(s.chooseDestination({ choice: 'Dadar' })).destination, 'Bastian - At The Top');
+  assert.equal(JSON.parse(await s.chooseDestination({ choice: 'Dadar' })).destination, 'Bastian - At The Top');
   s.update({ destinationStatus: 'ambiguous', destination: null });
-  assert.equal(JSON.parse(s.chooseDestination({ choice: '2' })).destination, 'Bastian (Bandra West)');
+  assert.equal(JSON.parse(await s.chooseDestination({ choice: '2' })).destination, 'Bastian (Bandra West)');
   s.update({ destinationStatus: 'ambiguous', destination: null });
-  assert.ok(JSON.parse(s.chooseDestination({ choice: 'Bastian' })).error, 'ambiguous choice is refused');
+  assert.ok(JSON.parse(await s.chooseDestination({ choice: 'Bastian' })).error, 'ambiguous choice is refused');
+});
+
+test('confirm_details fetches the advice itself once everything is ready', async () => {
+  const calls: string[] = [];
+  const fakeFetch = (async (url: string) => {
+    calls.push(String(url));
+    return new Response(JSON.stringify({ spoken: { text: 'Bring an umbrella.' }, weather: { dataStatus: 'live' } }), { status: 200 });
+  }) as unknown as typeof fetch;
+  const s = new OutingSession('http://x', 'en', {}, fakeFetch);
+  s.update({ destination: { kind: 'place', name: 'Juhu', forecastPoint: { label: 'Juhu', lat: 19.1, lon: 72.82 } }, destinationStatus: 'resolved', date: '2026-10-05', departure: '19:00', return: '23:00' });
+  const out = JSON.parse(await s.confirmDetails());
+  assert.equal(out.advice.status, 'ok');
+  assert.equal(out.advice.spoken_summary, 'Bring an umbrella.');
+  assert.ok(calls.some((u) => u.endsWith('/api/v2/outing')));
 });
 
 test('spoken agreement measures how much of the summary was said', () => {
   const summary = 'Bring a compact umbrella; rain chance reaches 85%.';
   assert.ok(spokenAgreement(`${summary} The full cards are on screen.`, summary) > 0.95);
   assert.ok(spokenAgreement('It will be sunny, wear shorts.', summary) < 0.6);
+  // Numbers spoken as words and names transliterated still count as the same summary.
+  const hi = 'Bastian - At The Top के लिए 33.7°C तापमान और 84% आर्द्रता के कारण ढीले कपड़े पहनें।';
+  const saidHi = 'बैस्टियन - एट द टॉप के लिए तैंतीस दशमलव सात डिग्री सेल्सियस तापमान और चौरासी प्रतिशत आर्द्रता के कारण ढीले कपड़े पहनें।';
+  assert.ok(spokenAgreement(saidHi, hi) > 0.95, String(spokenAgreement(saidHi, hi)));
+  assert.ok(spokenAgreement('बैस्टियन के लिए धूप तेज़ है, शॉर्ट्स पहनें।', hi) < 0.6);
 });
 
 // ---------------------------------------------------------------- wardrobe

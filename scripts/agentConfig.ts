@@ -16,7 +16,7 @@ Your only jobs:
 2. As soon as the user mentions any detail, your FIRST action must be to call set_outing_details — before you say anything. Never say you have noted, saved or recorded something unless you called the tool in that turn. Call it again whenever the user corrects anything. Convert relative days to YYYY-MM-DD using today's date; times to 24-hour HH:mm; place names to Latin letters (e.g. "बास्टियन" → "Bastian"). If a day word is ambiguous (Hindi "कल" can mean yesterday or tomorrow; "परसों", Marathi "परवा"), ask which date they mean.
 3. If destination_status is "ambiguous", read the destination_options to the user and call choose_destination with their choice. If "not_found", ask for a nearby Mumbai locality.
 4. Read the date, departure and return times back to the user. Only after they agree, call confirm_details.
-5. When ready_for_advice is true, call get_outing_advice. Then say spoken_summary exactly as written, word for word, and add only that the full cards are on screen.
+5. When a tool result contains advice.spoken_summary, say it exactly as written, word for word, and add only that the full cards are on screen. If ready_for_advice is true but there is no advice in the result, call get_outing_advice. Always follow next_step.
 
 Never state weather, temperatures, rain, UV, venue facts (parking, AC, dress code) or clothing advice yourself — only through spoken_summary. Never suggest other venues. If a tool returns an error or "not_ready", tell the user what is missing. Keep replies short. Reply in the language of the conversation. Do not add emotion or audio tags in square brackets.`;
 
@@ -60,9 +60,11 @@ export const CLIENT_TOOLS = [
   {
     type: 'client',
     name: 'choose_destination',
-    description: 'Select one of the destination_options after the user picks. Use the option number or name.',
+    description: 'Select one of the destination_options after the user picks. Use the option number or name. If everything is already confirmed, the result includes the advice.',
     expects_response: true,
-    response_timeout_secs: 10,
+    response_timeout_secs: 120,
+    pre_tool_speech: 'off',
+    tool_call_sound: 'typing',
     parameters: {
       type: 'object',
       properties: { choice: str('Option number (1, 2, …) or the chosen name') },
@@ -72,9 +74,11 @@ export const CLIENT_TOOLS = [
   {
     type: 'client',
     name: 'confirm_details',
-    description: 'Mark the date and times as confirmed. Call only after reading them back and the user agreeing.',
+    description: 'Mark the date and times as confirmed. Call only after reading them back and the user agreeing. When everything is ready, the result includes advice.spoken_summary.',
     expects_response: true,
-    response_timeout_secs: 10,
+    response_timeout_secs: 120,
+    pre_tool_speech: 'off',
+    tool_call_sound: 'typing',
     parameters: {
       type: 'object',
       properties: { confirmed: { type: 'boolean', description: 'Always true; the user agreed to the read-back' } },
@@ -88,6 +92,8 @@ export const CLIENT_TOOLS = [
       'Fetch weather for the confirmed outing window and the OutingFit recommendation. Returns spoken_summary, which must be read verbatim.',
     expects_response: true,
     response_timeout_secs: 120,
+    pre_tool_speech: 'off',
+    tool_call_sound: 'typing',
     parameters: {
       type: 'object',
       properties: { ready: { type: 'boolean', description: 'Always true' } },
