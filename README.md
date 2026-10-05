@@ -18,7 +18,7 @@ Weather-grounded outfit and packing advice for outings in Mumbai, in **English, 
 
 1. **Input.** The user talks to an ElevenLabs agent, dictates (Scribe v2 speech-to-text, with an editable transcript) or types. Gemma extracts the fields from dictated or typed text. The agent fills them itself through client tools. Either way the form on screen shows exactly what was understood.
 2. **Confirmation.** Weather is not fetched until the destination is unambiguous and the date and times are confirmed. "Bastian" matches two branches. Hindi "कल" can mean yesterday or tomorrow.
-3. **Weather.** The destination's GeoNames locality is geocoded. The Open-Meteo hourly forecast is validated: schema, units and plausible ranges. The app then takes the hours for departure, any explicit outdoor period, and return.
+3. **Weather.** The forecast point is the restaurant's own OpenStreetMap coordinates, or for curated venues and plain localities, the GeoNames locality. The Open-Meteo hourly forecast is validated: schema, units and plausible ranges. The app then takes the hours for departure, any explicit outdoor period, and return.
 4. **Decision layer** (`server/decision/engine.ts`, thresholds in `server/decision/config.ts`). Deterministic rules turn the weather values and stated preferences into Wear, Carry and Check items. Each item carries its evidence, for example "UV 9 at 13:00 (rule ≥ 6)" or "you said: covered drop-off = no".
 5. **Gemma** writes a short title and explanation for each item, an outfit idea and a 60-word spoken summary, in the selected language. It cannot add, drop or re-prioritise items. The output is rejected and retried once if:
    - it misses an item,
@@ -80,7 +80,8 @@ Render, via the `render.yaml` Blueprint — see [DEPLOYMENT.md](DEPLOYMENT.md).
   - 16-day horizon,
   - CC BY 4.0 attribution,
   - the free tier is **non-commercial**, with fewer than 10,000 calls a day. Commercial use needs a paid plan.
-- **Geocoding (GeoNames via Open-Meteo)** finds localities, not venues. Venue forecasts use the nearest locality, shown as "forecast point".
+- **Geocoding (GeoNames via Open-Meteo)** finds localities, not venues. Curated venues use the nearest locality, shown as "forecast point".
+- **Restaurants (OpenStreetMap)**: every named eatery OSM has in Greater Mumbai (restaurants, cafés, fast food, bars, pubs, food courts, ice cream; about 2,100 places) ships as a snapshot in `server/data/mumbaiRestaurants.json`. When the snapshot has no match, the app asks Nominatim live (at most 1 request a second, results cached for 24 h). Data © OpenStreetMap contributors, ODbL; the attribution is shown next to every result. Refresh the snapshot with `npm run data:restaurants`. OSM doesn't list every Mumbai restaurant (Gajalee, for example, is missing), and it has no valet, dress-code or AC facts.
 
 ## Completed vs planned
 
@@ -92,7 +93,7 @@ Render, via the `render.yaml` Blueprint — see [DEPLOYMENT.md](DEPLOYMENT.md).
   - hourly UV kept separate from the daily maximum,
   - current conditions labelled as a model estimate, not an observation,
   - an explanation when the date is beyond the forecast horizon.
-- Destination resolution with an ambiguity prompt. Date and time confirmation (Asia/Kolkata, return after midnight handled).
+- Destination resolution across the curated registry, every OpenStreetMap restaurant in Mumbai and GeoNames localities, with an ambiguity prompt for branches ("Mahesh Lunch Home") and a "add the area" hint when there are many ("Starbucks"). Date and time confirmation (Asia/Kolkata, return after midnight handled).
 - A configurable decision layer, plus Gemma personalisation with output validation and real-Gemma fallback (Gemini API, then local Ollama).
 - **Wardrobe ideas**: concrete outfits grouped by garment family, not gender. The families are dresses & skirts, shirts & trousers, Indian wear (kurta sets, anarkali, sarees, Nehru jacket, bandhgala) and co-ords & jumpsuits. They're filtered by dress level (chosen, or taken from the venue dress code or occasion) and annotated from the same decisions: fabric for heat, coverage for UV, hem length and fabric for rain, and a matching layer for AC (`server/wardrobe/`).
 - Wear / Carry / Check cards with evidence chips, product-evidence caveats (UV400/ISO 12312-1, UPF, SPF 30), and "Already own this?" toggles.
@@ -108,7 +109,7 @@ Render, via the `render.yaml` Blueprint — see [DEPLOYMENT.md](DEPLOYMENT.md).
 **Planned / not done**
 
 - No live municipal waterlogging feed. No public API with documented terms was found.
-- Venue facts (dress code, drop-off) come from a small curated registry and are marked *unconfirmed*. AC is used only when the user states it.
+- Venue facts (dress code, drop-off) exist only for the small curated registry and are marked *unconfirmed*. OpenStreetMap restaurants have none. AC is used only when the user states it.
 - Mixed-language speech is supported only as far as the providers handle it. OutingFit doesn't add code-switching handling of its own.
 - The agent dialogue LLM is not Gemma. An ElevenLabs custom-LLM integration pointing at Gemma's OpenAI-compatible endpoint is possible but not built or tested.
 - The old Sentry telemetry modal and its fabricated "failure evidence" narrative were removed from the UI. The `/api/telemetry/*` endpoints still exist but are not wired into the new pipeline.

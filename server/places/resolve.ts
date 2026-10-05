@@ -1,5 +1,6 @@
 /**
- * Destination resolution: curated venue registry + GeoNames localities.
+ * Destination resolution: curated venue registry + every OpenStreetMap restaurant
+ * in Mumbai + GeoNames localities.
  *
  * Returns every plausible candidate. The caller must ask the user to choose
  * when more than one candidate is returned — weather is never fetched for an
@@ -8,15 +9,18 @@
 
 import { REPUTED_VENUES, VenueRecord } from '../data/mumbaiRegistry.ts';
 import { foldName, geocodeMumbai, GeocodeCandidate } from '../weather/openMeteo.ts';
+import { OSM_ATTRIBUTION, RestaurantRecord, searchRestaurants, searchRestaurantsLive } from './restaurants.ts';
 import { ResolvedDestination } from '../domain.ts';
 
 export const REGISTRY_SOURCE = 'OutingFit curated venue registry (not independently verified)';
+/** More branches than this and the user is asked to add the area instead of scrolling a list. */
+export const MAX_RESTAURANT_CANDIDATES = 8;
 
 export interface DestinationCandidate {
   id: string;
   destination: ResolvedDestination;
   subtitle: string;
-  source: 'registry' | 'geonames';
+  source: 'registry' | 'osm' | 'geonames';
 }
 
 export interface ResolveResult {
@@ -27,28 +31,32 @@ export interface ResolveResult {
   geocodingError?: string;
 }
 
-function registryMatches(query: string): VenueRecord[] {
+/** Match strength: 1 = name or alias, 2 = name inside a sentence, 3 = spelling slip. */
+type MatchTier = 1 | 2 | 3;
+
+function registryMatches(query: string): { venues: VenueRecord[]; tier: MatchTier } {
   const q = foldName(query);
-  if (!q) return [];
+  if (!q) return { venues: [], tier: 3 };
   const tokens = q.split(' ').filter((t) => t.length >= 3);
   const names = (v: VenueRecord) => [v.name, ...v.aliases].map(foldName);
   // Tier 1: the query is (part of) a venue name or alias — "bastian" hits both branches,
   // "bastian at the top" only the Dadar one.
   const direct = REPUTED_VENUES.filter((v) => names(v).some((n) => n.includes(q)));
-  if (direct.length) return direct;
+  if (direct.length) return { venues: direct, tier: 1 };
   // Tier 2: a longer sentence that contains a venue name or its first word.
   const contained = REPUTED_VENUES.filter((v) => {
     if (names(v).some((n) => n.length >= 4 && q.includes(n))) return true;
     const first = foldName(v.name).split(' ')[0];
     return first.length >= 4 && tokens.includes(first);
   });
-  if (contained.length) return contained;
+  if (contained.length) return { venues: contained, tier: 2 };
   // Tier 3: one-letter spelling variants from speech recognition or transliteration
   // ("Bastion" → "Bastian"). Still returns every match so the user confirms.
-  return REPUTED_VENUES.filter((v) => {
+  const fuzzy = REPUTED_VENUES.filter((v) => {
     const words = new Set(names(v).flatMap((n) => n.split(' ')).filter((w) => w.length >= 5));
     return tokens.some((t) => t.length >= 5 && [...words].some((w) => editDistance(t, w) <= 1));
   });
+  return { venues: fuzzy, tier: 3 };
 }
 
 function editDistance(a: string, b: string): number {
@@ -66,6 +74,30 @@ async function forecastPointForVenue(v: VenueRecord, timeoutMs: number): Promise
   const geo = await geocodeMumbai(v.forecastLocality, timeoutMs);
   const g = geo[0];
   return g ? { label: `${g.name}, Mumbai (GeoNames locality)`, lat: g.lat, lon: g.lon } : null;
+}
+
+function restaurantCandidate(r: RestaurantRecord): DestinationCandidate {
+  const kind = r.cuisine?.length ? r.cuisine.slice(0, 2).join(', ') : r.type.replace(/_/g, ' ');
+  return {
+    id: `osm:${r.id}`,
+    destination: {
+      kind: 'restaurant',
+      venueId: r.id,
+      name: r.name,
+      forecastPoint: { label: `${r.name}, ${r.locality} (OpenStreetMap)`, lat: r.lat, lon: r.lon },
+    },
+    subtitle: `${r.locality} · ${kind} · ${OSM_ATTRIBUTION}`,
+    source: 'osm',
+  };
+}
+
+/** Best restaurants first: names that start with the query, then sit-down places. */
+function rankRestaurants(q: string, list: RestaurantRecord[]): RestaurantRecord[] {
+  const fq = foldName(q);
+  const typeRank = (t: string) => ['restaurant', 'bar', 'pub', 'cafe'].indexOf(t) >>> 0;
+  return [...list].sort(
+    (a, b) => Number(!foldName(a.name).startsWith(fq)) - Number(!foldName(b.name).startsWith(fq)) || typeRank(a.type) - typeRank(b.type)
+  );
 }
 
 function placeCandidate(g: GeocodeCandidate): DestinationCandidate {
@@ -86,7 +118,12 @@ export async function resolveDestination(query: string, timeoutMs: number): Prom
   const candidates: DestinationCandidate[] = [];
   let geocodingError: string | undefined;
 
-  for (const v of registryMatches(q)) {
+  const registry = registryMatches(q);
+  const snapshot = searchRestaurants(q);
+  // Only the strongest kind of match counts: "starbucks bandra" naming a Starbucks
+  // outranks curated venues that merely mention Bandra.
+  const bestTier = Math.min(registry.venues.length ? registry.tier : 9, snapshot.restaurants.length ? snapshot.tier : 9);
+  for (const v of registry.tier === bestTier ? registry.venues : []) {
     try {
       const point = await forecastPointForVenue(v, timeoutMs);
       if (!point) continue;
@@ -101,6 +138,28 @@ export async function resolveDestination(query: string, timeoutMs: number): Prom
     }
   }
 
+  // Every restaurant in the OSM snapshot; ask OSM live only when the snapshot has none.
+  const matchedVenues = candidates.map((c) => venueById(c.destination.venueId)).filter((v): v is VenueRecord => v !== null);
+  // A curated venue already covers its own OSM entry and carries richer facts. Aliases alone
+  // ("olive") are too loose, so they count only when the OSM entry is in the same area.
+  const coveredByRegistry = (r: RestaurantRecord) =>
+    matchedVenues.some(
+      (v) =>
+        foldName(v.name) === foldName(r.name) ||
+        (v.aliases.some((a) => foldName(a) === foldName(r.name)) && foldName(v.neighborhood).includes(foldName(r.locality).split(' ')[0]))
+    );
+  let restaurants = snapshot.tier === bestTier ? snapshot.restaurants : [];
+  if (restaurants.length === 0 && candidates.length === 0) {
+    try {
+      restaurants = await searchRestaurantsLive(q, timeoutMs);
+    } catch (err: any) {
+      geocodingError = err.message;
+    }
+  }
+  restaurants = rankRestaurants(q, restaurants.filter((r) => !coveredByRegistry(r)));
+  const restaurantTotal = restaurants.length;
+  for (const r of restaurants.slice(0, MAX_RESTAURANT_CANDIDATES)) candidates.push(restaurantCandidate(r));
+
   try {
     for (const g of await geocodeMumbai(q, timeoutMs)) {
       if (!candidates.some((c) => Math.abs(c.destination.forecastPoint.lat - g.lat) < 1e-4 && c.source === 'geonames')) {
@@ -112,7 +171,7 @@ export async function resolveDestination(query: string, timeoutMs: number): Prom
   }
 
   // A locality hit that is only the forecast point of a single matched venue adds no ambiguity.
-  const venues = candidates.filter((c) => c.source === 'registry');
+  const venues = candidates.filter((c) => c.source === 'registry' || c.source === 'osm');
   const places = candidates.filter((c) => c.source === 'geonames');
   // An exact locality name ("Juhu") means the locality — not venues located there or
   // prefix matches like "Juhu Island". With no exact locality, venues take priority.
@@ -126,7 +185,7 @@ export async function resolveDestination(query: string, timeoutMs: number): Prom
       candidates: [],
       message: geocodingError
         ? `Could not look up "${q}" (${geocodingError}). Try again or enter a nearby Mumbai locality.`
-        : `"${q}" was not found in the venue registry or as a Mumbai locality. Enter a nearby locality (e.g. Bandra, Colaba, Juhu).`,
+        : `"${q}" was not found among Mumbai restaurants or localities. Check the spelling, or enter a nearby locality (e.g. Bandra, Colaba, Juhu).`,
       geocodingError,
     };
   }
@@ -137,7 +196,10 @@ export async function resolveDestination(query: string, timeoutMs: number): Prom
     query: q,
     status: 'ambiguous',
     candidates: final,
-    message: `"${q}" matches ${final.length} places. Please choose one before weather is fetched.`,
+    message:
+      final === venues && restaurantTotal > MAX_RESTAURANT_CANDIDATES
+        ? `"${q}" matches ${restaurantTotal} Mumbai restaurants; showing the first ${MAX_RESTAURANT_CANDIDATES}. Add the area (e.g. "${q} Bandra") to narrow it down, or choose one.`
+        : `"${q}" matches ${final.length} places. Please choose one before weather is fetched.`,
     geocodingError,
   };
 }
