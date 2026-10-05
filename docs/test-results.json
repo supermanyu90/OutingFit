@@ -1,11 +1,11 @@
 {
-  "ranAt": "2026-10-04T13:43:42.531Z",
-  "base": "http://localhost:3200",
+  "ranAt": "2026-10-05T09:42:45.824Z",
+  "base": "https://outingfit-mumbai.onrender.com",
   "status": {
     "now": {
-      "date": "2026-10-04",
-      "time": "19:08",
-      "localIso": "2026-10-04T19:08"
+      "date": "2026-10-05",
+      "time": "15:04",
+      "localIso": "2026-10-05T15:04"
     },
     "timezone": "Asia/Kolkata",
     "gemma": {
@@ -32,7 +32,7 @@
     "voice": {
       "configured": true,
       "agentConfigured": true,
-      "checkedAt": "2026-10-04T13:35:23.833Z",
+      "checkedAt": "2026-10-05T09:34:39.557Z",
       "languages": {
         "en": {
           "stt": {
@@ -163,12 +163,12 @@
         {
           "name": "hourly UV (outdoor period) distinct from daily max",
           "pass": true,
-          "detail": "outdoor hourly max 9 at 2026-10-05T13:00; daily max 9"
+          "detail": "outdoor hourly max 9 at 2026-10-06T13:00; daily max 9"
         },
         {
           "name": "local Asia/Kolkata hours cover the outing; °C, %, mm, km/h units validated",
           "pass": true,
-          "detail": "window 2026-10-05T13:00→2026-10-05T17:00; hours 13:00,14:00,15:00,16:00,17:00; sunset 2026-10-05T18:15"
+          "detail": "window 2026-10-06T13:00→2026-10-06T17:00; hours 13:00,14:00,15:00,16:00,17:00; sunset 2026-10-06T18:15"
         },
         {
           "name": "spoken summary validated to cover essential/recommended items",
@@ -178,7 +178,7 @@
         {
           "name": "spoken numbers appear in displayed data",
           "pass": true,
-          "detail": "numbers: 9, 39"
+          "detail": "numbers: 9, 30, 39"
         }
       ],
       "notes": [],
@@ -186,28 +186,28 @@
         "weather": {
           "status": "fixture",
           "usable": true,
-          "retrievedAt": "2026-10-04T13:38:17.427Z",
+          "retrievedAt": "2026-10-05T09:34:40.751Z",
           "grid": [
             19.10259,
             72.82425
           ]
         },
         "window": {
-          "start": "2026-10-05T13:00",
-          "end": "2026-10-05T17:00",
+          "start": "2026-10-06T13:00",
+          "end": "2026-10-06T17:00",
           "returnsNextDay": false,
           "durationMinutes": 240
         },
         "hours": [
-          "2026-10-05T13:00",
-          "2026-10-05T14:00",
-          "2026-10-05T15:00",
-          "2026-10-05T16:00",
-          "2026-10-05T17:00"
+          "2026-10-06T13:00",
+          "2026-10-06T14:00",
+          "2026-10-06T15:00",
+          "2026-10-06T16:00",
+          "2026-10-06T17:00"
         ],
         "whole": {
-          "from": "2026-10-05T13:00",
-          "to": "2026-10-05T17:00",
+          "from": "2026-10-06T13:00",
+          "to": "2026-10-06T17:00",
           "hours": 5,
           "temperatureMaxC": 34,
           "feelsLikeMaxC": 39,
@@ -217,7 +217,7 @@
           "precipitationTotalMm": 0,
           "precipitationMaxHourlyMm": 0,
           "uvIndexMaxHourly": 9,
-          "uvIndexMaxHourlyAt": "2026-10-05T13:00",
+          "uvIndexMaxHourlyAt": "2026-10-06T13:00",
           "windMaxKmh": 13,
           "gustMaxKmh": 27,
           "cloudCoverMeanPct": 10
@@ -237,15 +237,15 @@
           "used": true,
           "runtime": "gemini_api",
           "model": "gemma-4-26b-a4b-it",
-          "latencyMs": 15680,
+          "latencyMs": 16102,
           "validation": {
             "passed": true,
             "errors": [],
             "retried": false
           }
         },
-        "spoken": "Since you'll be outdoors for an extended time with a UV index of 9 and a feels-like temperature of 39°C, wear loose, breathable casual clothes and sun coverage like long sleeves. Don't forget to bring a hat, sunglasses, sunscreen, and a water bottle to stay comfortable.",
-        "outfit": "Wear loose, breathable casual clothing and bring a hat, sunglasses, sunscreen, and water for your beach walk.",
+        "spoken": "For your beach walk, wear loose and breathable casual clothes. Since you'll be outdoors with a UV index of 9, please bring a hat, sunglasses with a UV label, and apply SPF 30+ sunscreen. Also, remember to carry a water bottle to stay hydrated in the 39°C feels-like temperature.",
+        "outfit": "Wear loose, breathable casual clothing with sun coverage like long sleeves. Complete your beach walk kit with a hat, UV-rated sunglasses, sunscreen, and a water bottle.",
         "cards": {
           "wear": [
             {
@@ -261,19 +261,19 @@
             {
               "id": "wear.loose_fit",
               "title": "Loose Fitting Clothes",
-              "explanation": "Wear loose, single-layer clothing to stay comfortable when the feels-like temperature hits 39°C and humidity is 52%."
+              "explanation": "Wear a loose, single-layer fit to stay comfortable when the feels-like temperature hits 39°C and humidity is 52%."
             },
             {
               "id": "wear.formality",
               "title": "Casual Style",
-              "explanation": "Stick to casual attire to match your beach walk with friends."
+              "explanation": "Stick to casual clothing to match your beach walk with friends."
             }
           ],
           "carry": [
             {
               "id": "carry.sunscreen",
               "title": "Apply Sunscreen",
-              "explanation": "Use a broad-spectrum SPF 30 or higher sunscreen for your extended outdoor exposure while the UV index is 9."
+              "explanation": "Use a broad-spectrum SPF 30 or higher sunscreen due to the UV index of 9 and extended outdoor exposure."
             },
             {
               "id": "carry.water",
@@ -283,19 +283,19 @@
             {
               "id": "carry.hat",
               "title": "Bring a Hat",
-              "explanation": "Bring a wide-brimmed hat or cap to protect yourself during extended outdoor exposure with a UV index of 9."
+              "explanation": "Bring a wide-brimmed hat or cap to protect yourself during extended outdoor exposure and a UV index of 9."
             },
             {
               "id": "carry.sunglasses",
               "title": "Bring Sunglasses",
-              "explanation": "Bring sunglasses with a UV400 or ISO 12312-1 label for your extended outdoor time when the UV index is 9."
+              "explanation": "Bring sunglasses with a UV400 or ISO 12312-1 label for protection against the UV index of 9 during your extended outdoor time."
             }
           ],
           "check": [
             {
               "id": "check.waterlogging",
               "title": "Check Waterlogging",
-              "explanation": "The local waterlogging status is currently unknown."
+              "explanation": "The local waterlogging status is unknown, so stay alert."
             }
           ]
         }
@@ -304,7 +304,7 @@
     {
       "id": "rainy",
       "title": "2. Humid, rainy evening with a short car-to-entrance walk (fixture weather)",
-      "status": "pass",
+      "status": "fail",
       "checks": [
         {
           "name": "umbrella essential for uncovered drop-off",
@@ -338,13 +338,13 @@
         },
         {
           "name": "spoken summary validated to cover essential/recommended items",
-          "pass": true,
-          "detail": "covers wear.breathable_fabric, wear.loose_fit, carry.umbrella, wear.wet_weather_footwear, check.dress_code, check.waterlogging"
+          "pass": false,
+          "detail": "All Gemma runtimes failed"
         },
         {
-          "name": "spoken numbers appear in displayed data",
-          "pass": true,
-          "detail": "numbers: 85, 17.2, 46"
+          "name": "spoken numbers match display",
+          "pass": false,
+          "detail": "no spoken summary"
         }
       ],
       "notes": [],
@@ -352,27 +352,27 @@
         "weather": {
           "status": "fixture",
           "usable": true,
-          "retrievedAt": "2026-10-04T13:38:33.121Z",
+          "retrievedAt": "2026-10-05T09:34:58.062Z",
           "grid": [
             19,
             72.83333
           ]
         },
         "window": {
-          "start": "2026-10-04T19:30",
-          "end": "2026-10-04T22:30",
+          "start": "2026-10-05T19:30",
+          "end": "2026-10-05T22:30",
           "returnsNextDay": false,
           "durationMinutes": 180
         },
         "hours": [
-          "2026-10-04T19:00",
-          "2026-10-04T20:00",
-          "2026-10-04T21:00",
-          "2026-10-04T22:00"
+          "2026-10-05T19:00",
+          "2026-10-05T20:00",
+          "2026-10-05T21:00",
+          "2026-10-05T22:00"
         ],
         "whole": {
-          "from": "2026-10-04T19:00",
-          "to": "2026-10-04T22:00",
+          "from": "2026-10-05T19:00",
+          "to": "2026-10-05T22:00",
           "hours": 4,
           "temperatureMaxC": 27,
           "feelsLikeMaxC": 33,
@@ -382,7 +382,7 @@
           "precipitationTotalMm": 17.2,
           "precipitationMaxHourlyMm": 6.2,
           "uvIndexMaxHourly": 0,
-          "uvIndexMaxHourlyAt": "2026-10-04T19:00",
+          "uvIndexMaxHourlyAt": "2026-10-05T19:00",
           "windMaxKmh": 24,
           "gustMaxKmh": 46,
           "cloudCoverMeanPct": 98
@@ -399,68 +399,66 @@
           "check:check.waterlogging(recommended)"
         ],
         "gemma": {
-          "used": true,
-          "runtime": "gemini_api",
-          "model": "gemma-4-26b-a4b-it",
-          "latencyMs": 16471,
+          "used": false,
           "validation": {
-            "passed": true,
+            "passed": false,
             "errors": [],
             "retried": false
-          }
+          },
+          "error": "All Gemma runtimes failed"
         },
-        "spoken": "For your dinner, wear breathable, loose smart casual clothes and grippy footwear. Since there's an 85% chance of rain and 17.2mm of precipitation, bring an umbrella and consider a rain jacket for the 46km/h gusts. Finally, double-check the venue's dress code and look for any waterlogging reports before you head out.",
-        "outfit": "Wear breathable, loose-fitting smart casual clothing with grippy footwear, and carry an umbrella for the rain.",
+        "spoken": null,
+        "outfit": null,
         "cards": {
           "wear": [
             {
               "id": "wear.breathable_fabric",
-              "title": "Breathable Fabrics",
-              "explanation": "Opt for cotton or linen because the feels-like temperature is 33°C and humidity is 91%."
+              "title": "Light, breathable natural or moisture-wicking fabric (cotton, linen, or a performance blend)",
+              "explanation": null
             },
             {
               "id": "wear.loose_fit",
-              "title": "Loose Single-Layer Fit",
-              "explanation": "Wear loose clothing to stay comfortable with a 33°C feels-like temperature and 91% humidity."
+              "title": "Loose, single-layer fit that lets air move; skip outdoor layers",
+              "explanation": null
             },
             {
               "id": "wear.wet_weather_footwear",
-              "title": "Grippy Footwear",
-              "explanation": "Wear closed, grippy shoes to handle the 85% rain probability and 6.2mm heaviest hourly precipitation."
+              "title": "Closed, grippy footwear that tolerates water; avoid suede and smooth leather soles",
+              "explanation": null
             },
             {
               "id": "wear.quick_dry",
-              "title": "Quick-Dry Clothing",
-              "explanation": "Choose quick-drying fabrics due to the 85% rain probability and 17.2mm of total precipitation."
+              "title": "Quick-drying fabric and hems that stay clear of the ground",
+              "explanation": null
             },
             {
               "id": "wear.formality",
-              "title": "Smart Casual Style",
-              "explanation": "Dress in smart casual attire to match your dinner with family at The Bombay Canteen."
+              "title": "Match the formality of the occasion and venue",
+              "explanation": null
             }
           ],
           "carry": [
             {
               "id": "carry.umbrella",
-              "title": "Bring an Umbrella",
-              "explanation": "Bring an umbrella you already have since there is an 85% rain probability and 17.2mm of precipitation."
+              "title": "Compact umbrella",
+              "explanation": null
             },
             {
               "id": "carry.rain_jacket",
-              "title": "Optional Rain Jacket",
-              "explanation": "A light hooded jacket is useful given the 46km/h wind gusts and 85% rain probability."
+              "title": "Light hooded rain jacket (gusts make umbrellas hard to use)",
+              "explanation": null
             }
           ],
           "check": [
             {
               "id": "check.dress_code",
-              "title": "Verify Dress Code",
-              "explanation": "Confirm the smart casual dress code with the venue to ensure no beachwear or flip-flops are worn."
+              "title": "Confirm the dress code with the venue",
+              "explanation": null
             },
             {
               "id": "check.waterlogging",
-              "title": "Check Waterlogging",
-              "explanation": "Review available waterlogging reports before choosing your route to the venue."
+              "title": "Review the waterlogging reports below before choosing a route",
+              "explanation": null
             }
           ]
         }
@@ -474,7 +472,7 @@
         {
           "name": "live forecast used",
           "pass": true,
-          "detail": "cached, retrieved 2026-10-04T13:36:19.678Z"
+          "detail": "live, retrieved 2026-10-05T09:35:12.485Z"
         },
         {
           "name": "AC layer recommended from stated preference",
@@ -484,22 +482,22 @@
         {
           "name": "no sun gear after sunset",
           "pass": true,
-          "detail": "sunset 2026-10-04T18:24"
+          "detail": "sunset 2026-10-05T18:23"
         },
         {
           "name": "local Asia/Kolkata hours cover the outing; °C, %, mm, km/h units validated",
           "pass": true,
-          "detail": "window 2026-10-04T20:00→2026-10-04T23:00; hours 20:00,21:00,22:00,23:00; sunset 2026-10-04T18:24"
+          "detail": "window 2026-10-05T20:00→2026-10-05T23:00; hours 20:00,21:00,22:00,23:00; sunset 2026-10-05T18:23"
         },
         {
           "name": "spoken summary validated to cover essential/recommended items",
           "pass": true,
-          "detail": "covers wear.breathable_fabric, wear.ac_layer, check.drop_off_cover, check.dress_code"
+          "detail": "covers wear.breathable_fabric, wear.loose_fit, wear.ac_layer, check.drop_off_cover, check.dress_code"
         },
         {
           "name": "spoken numbers appear in displayed data",
           "pass": true,
-          "detail": "numbers: 33.2"
+          "detail": "numbers: 34.2, 82"
         }
       ],
       "notes": [
@@ -507,45 +505,46 @@
       ],
       "data": {
         "weather": {
-          "status": "cached",
+          "status": "live",
           "usable": true,
-          "retrievedAt": "2026-10-04T13:36:19.678Z",
+          "retrievedAt": "2026-10-05T09:35:12.485Z",
           "grid": [
             19.015816,
             72.86982
           ]
         },
         "window": {
-          "start": "2026-10-04T20:00",
-          "end": "2026-10-04T23:00",
+          "start": "2026-10-05T20:00",
+          "end": "2026-10-05T23:00",
           "returnsNextDay": false,
           "durationMinutes": 180
         },
         "hours": [
-          "2026-10-04T20:00",
-          "2026-10-04T21:00",
-          "2026-10-04T22:00",
-          "2026-10-04T23:00"
+          "2026-10-05T20:00",
+          "2026-10-05T21:00",
+          "2026-10-05T22:00",
+          "2026-10-05T23:00"
         ],
         "whole": {
-          "from": "2026-10-04T20:00",
-          "to": "2026-10-04T23:00",
+          "from": "2026-10-05T20:00",
+          "to": "2026-10-05T23:00",
           "hours": 4,
-          "temperatureMaxC": 30.4,
-          "feelsLikeMaxC": 33.2,
-          "feelsLikeMinC": 30.9,
-          "humidityMaxPct": 56,
+          "temperatureMaxC": 29.5,
+          "feelsLikeMaxC": 34.2,
+          "feelsLikeMinC": 33.8,
+          "humidityMaxPct": 82,
           "rainProbabilityMaxPct": 0,
           "precipitationTotalMm": 0,
           "precipitationMaxHourlyMm": 0,
           "uvIndexMaxHourly": 0,
-          "uvIndexMaxHourlyAt": "2026-10-04T20:00",
-          "windMaxKmh": 8.6,
-          "gustMaxKmh": 23.4,
+          "uvIndexMaxHourlyAt": "2026-10-05T20:00",
+          "windMaxKmh": 10.5,
+          "gustMaxKmh": 27.4,
           "cloudCoverMeanPct": 0
         },
         "items": [
           "wear:wear.breathable_fabric(recommended)",
+          "wear:wear.loose_fit(recommended)",
           "wear:wear.ac_layer(recommended)",
           "wear:wear.formality(info)",
           "check:check.drop_off_cover(recommended)",
@@ -556,31 +555,36 @@
           "used": true,
           "runtime": "gemini_api",
           "model": "gemma-4-26b-a4b-it",
-          "latencyMs": 11772,
+          "latencyMs": 13006,
           "validation": {
             "passed": true,
             "errors": [],
             "retried": false
           }
         },
-        "spoken": "For your anniversary dinner, wear breathable smart casual clothes to handle the 33.2°C feels-like temperature. Since you feel cold in AC, bring a light layer. Also, confirm the venue's dress code regarding footwear and check if your car can drop you off under cover.",
-        "outfit": "Wear breathable smart casual clothing for your anniversary dinner, and carry a light layer for the indoor AC.",
+        "spoken": "For your anniversary dinner, wear breathable, loose-fitting smart casual clothes to handle the 34.2°C feels-like temperature and 82% humidity. Since you feel cold in AC, bring a light layer. Also, check if your car can drop you off under cover and confirm the venue's dress code beforehand.",
+        "outfit": "Wear breathable, loose-fitting smart casual clothes for your anniversary dinner, and carry a light layer for the indoor AC.",
         "cards": {
           "wear": [
             {
               "id": "wear.breathable_fabric",
               "title": "Breathable Fabrics",
-              "explanation": "Opt for light, breathable fabrics because the highest feels-like temperature is 33.2°C and humidity is 56%."
+              "explanation": "Opt for cotton or linen because the feels-like temperature is 34.2°C and humidity is 82%."
+            },
+            {
+              "id": "wear.loose_fit",
+              "title": "Loose Single-Layer Fit",
+              "explanation": "A loose fit helps with air movement given the 34.2°C feels-like temperature and 82% humidity."
             },
             {
               "id": "wear.ac_layer",
               "title": "Light AC Layer",
-              "explanation": "Bring a light layer like a shawl or cardigan since you mentioned you feel cold in AC."
+              "explanation": "Bring a light layer like a shawl or cardigan because you mentioned you feel cold in AC."
             },
             {
               "id": "wear.formality",
               "title": "Smart Casual Attire",
-              "explanation": "Dress in smart casual styles to match your Anniversary dinner occasion and the venue's vibe."
+              "explanation": "Dress for your Anniversary dinner following the smart_casual formality."
             }
           ],
           "carry": [],
@@ -588,12 +592,12 @@
             {
               "id": "check.drop_off_cover",
               "title": "Check Drop-off Cover",
-              "explanation": "Since you are traveling by car, check if you can be dropped off under cover at the entrance."
+              "explanation": "Since you are traveling by car, check if the venue provides covered drop-off for your arrival."
             },
             {
               "id": "check.dress_code",
               "title": "Confirm Dress Code",
-              "explanation": "Confirm the venue's 'Glamorous / Smart Chic' dress code, which notes no athletic gear and no open footwear for men."
+              "explanation": "Verify the venue's 'Glamorous / Smart Chic' dress code to ensure compliance."
             },
             {
               "id": "check.waterlogging",
@@ -622,7 +626,7 @@
         {
           "name": "\"कल\" date flagged for confirmation",
           "pass": true,
-          "detail": "date 2026-10-05; confirmations: \"कल शाम\" can refer to more than one date. Please confirm the date."
+          "detail": "date 2026-10-06; confirmations: \"कल शाम\" can refer to more than one date. Please confirm the date."
         },
         {
           "name": "times extracted in 24h Mumbai time",
@@ -637,22 +641,22 @@
         {
           "name": "spoken summary validated to cover essential/recommended items",
           "pass": true,
-          "detail": "covers wear.breathable_fabric, wear.loose_fit, wear.ac_layer, check.drop_off_cover"
+          "detail": "covers wear.breathable_fabric, wear.loose_fit, check.indoor_ac, check.drop_off_cover"
         },
         {
           "name": "spoken numbers appear in displayed data",
           "pass": true,
-          "detail": "numbers: 33.7, 84"
+          "detail": "numbers: 33.5, 82"
         },
         {
           "name": "spoken summary in Devanagari (hi)",
           "pass": true,
-          "detail": "Bastian - At The Top के लिए ढीले और सांस लेने योग्य कपड़े पहनें क्योंकि तापमान 33.7°C और आर्द्रता 84% है। एसी में ठंड से बचने के लिए एक हल्का लेयर साथ रखें। कार से जाते समय ड्रॉप-ऑफ कवर की जांच कर लें।"
+          "detail": "33.5°C तापमान और 82% आर्द्रता के कारण सांस लेने योग्य और ढीले कपड़े पहनना अच्छा रहेगा। चूंकि आपको एसी में ठंड लगती है, एक हल्की लेयर साथ रखें। कृपया वेन्यू से एसी और ढके हुए ड्रॉप-ऑफ के बारे में पूछ लें।"
         },
         {
           "name": "spoken audio matches displayed summary (TTS → STT round trip)",
           "pass": true,
-          "detail": "TTS eleven_v3, 293033 bytes; agreement 77%; heard \"Bastian at the top के लिए ढीले और सांस लेने योग्य कपड़े पहनें क्योंकि तापमान 33.7 डिग्री Celsius और आर्द्रता 84% है। AC में ठंड से बचने के लिए एक हल्का layer साथ रखें। car से जाते समय drop off cover की जांच कर लें।\""
+          "detail": "TTS eleven_v3, 304318 bytes; agreement 85%; heard \"33.5 degree celsius तापमान और 82 प्रतिशत आर्द्रता के कारण सांस लेने योग्य और ढीले कपड़े पहनना अच्छा रहेगा। चूंकि आपको AC में ठंड लगती है, एक हल्की layer साथ रखें। कृपया venue से AC और ढके हुए drop off के बारे में पूछ लें।\""
         },
         {
           "name": "TTS refuses text that is not a backend summary",
@@ -672,7 +676,7 @@
           "destinationText": "Bastion",
           "destinationLatin": "Bastion",
           "dateExpression": "कल शाम",
-          "date": "2026-10-05",
+          "date": "2026-10-06",
           "dateAmbiguous": true,
           "departure": "19:00",
           "return": "23:00",
@@ -680,8 +684,8 @@
           "outdoorExposure": null,
           "transport": null,
           "coveredDropOff": null,
-          "venueSetting": "indoor",
-          "indoorAc": "user_expects",
+          "venueSetting": null,
+          "indoorAc": null,
           "feelsColdInAc": true,
           "occasion": null,
           "formality": null,
@@ -700,47 +704,48 @@
         "weather": {
           "status": "cached",
           "usable": true,
-          "retrievedAt": "2026-10-04T13:36:19.678Z",
+          "retrievedAt": "2026-10-05T09:35:12.485Z",
           "grid": [
             19.015816,
             72.86982
           ]
         },
         "window": {
-          "start": "2026-10-05T19:00",
-          "end": "2026-10-05T23:00",
+          "start": "2026-10-06T19:00",
+          "end": "2026-10-06T23:00",
           "returnsNextDay": false,
           "durationMinutes": 240
         },
         "hours": [
-          "2026-10-05T19:00",
-          "2026-10-05T20:00",
-          "2026-10-05T21:00",
-          "2026-10-05T22:00",
-          "2026-10-05T23:00"
+          "2026-10-06T19:00",
+          "2026-10-06T20:00",
+          "2026-10-06T21:00",
+          "2026-10-06T22:00",
+          "2026-10-06T23:00"
         ],
         "whole": {
-          "from": "2026-10-05T19:00",
-          "to": "2026-10-05T23:00",
+          "from": "2026-10-06T19:00",
+          "to": "2026-10-06T23:00",
           "hours": 5,
-          "temperatureMaxC": 29.3,
-          "feelsLikeMaxC": 33.7,
-          "feelsLikeMinC": 33.6,
-          "humidityMaxPct": 84,
-          "rainProbabilityMaxPct": 0,
+          "temperatureMaxC": 29,
+          "feelsLikeMaxC": 33.5,
+          "feelsLikeMinC": 33.1,
+          "humidityMaxPct": 82,
+          "rainProbabilityMaxPct": 7,
           "precipitationTotalMm": 0,
           "precipitationMaxHourlyMm": 0,
           "uvIndexMaxHourly": 0,
-          "uvIndexMaxHourlyAt": "2026-10-05T19:00",
-          "windMaxKmh": 11.5,
-          "gustMaxKmh": 29.9,
+          "uvIndexMaxHourlyAt": "2026-10-06T19:00",
+          "windMaxKmh": 9.8,
+          "gustMaxKmh": 25.9,
           "cloudCoverMeanPct": 1
         },
         "items": [
           "wear:wear.breathable_fabric(recommended)",
           "wear:wear.loose_fit(recommended)",
-          "wear:wear.ac_layer(recommended)",
+          "wear:wear.ac_layer(optional)",
           "wear:wear.formality(info)",
+          "check:check.indoor_ac(recommended)",
           "check:check.drop_off_cover(recommended)",
           "check:check.waterlogging(info)"
         ],
@@ -748,49 +753,54 @@
           "used": true,
           "runtime": "gemini_api",
           "model": "gemma-4-26b-a4b-it",
-          "latencyMs": 12283,
+          "latencyMs": 14451,
           "validation": {
             "passed": true,
             "errors": [],
             "retried": false
           }
         },
-        "spoken": "Bastian - At The Top के लिए ढीले और सांस लेने योग्य कपड़े पहनें क्योंकि तापमान 33.7°C और आर्द्रता 84% है। एसी में ठंड से बचने के लिए एक हल्का लेयर साथ रखें। कार से जाते समय ड्रॉप-ऑफ कवर की जांच कर लें।",
-        "outfit": "33.7°C तापमान और 84% आर्द्रता के लिए ढीले, सांस लेने योग्य कपड़े पहनें और एसी के लिए एक हल्का लेयर साथ रखें।",
+        "spoken": "33.5°C तापमान और 82% आर्द्रता के कारण सांस लेने योग्य और ढीले कपड़े पहनना अच्छा रहेगा। चूंकि आपको एसी में ठंड लगती है, एक हल्की लेयर साथ रखें। कृपया वेन्यू से एसी और ढके हुए ड्रॉप-ऑफ के बारे में पूछ लें।",
+        "outfit": "33.5°C तापमान और 82% आर्द्रता के लिए सांस लेने योग्य, ढीले कपड़े पहनें और एसी से बचने के लिए एक हल्की लेयर साथ रखें।",
         "cards": {
           "wear": [
             {
               "id": "wear.breathable_fabric",
               "title": "सांस लेने योग्य कपड़ा",
-              "explanation": "33.7°C के महसूस होने वाले तापमान और 84% आर्द्रता के कारण हल्का और सांस लेने योग्य कपड़ा पहनें।"
+              "explanation": "33.5°C के महसूस होने वाले तापमान और 82% आर्द्रता के कारण सूती या लिनन जैसे हल्के कपड़े पहनें।"
             },
             {
               "id": "wear.loose_fit",
-              "title": "ढीला फिटिंग",
-              "explanation": "33.7°C तापमान और 84% आर्द्रता को देखते हुए हवा के संचार के लिए ढीले कपड़े पहनें।"
+              "title": "ढीला और आरामदायक फिट",
+              "explanation": "33.5°C तापमान और 82% आर्द्रता को देखते हुए हवा के संचार के लिए ढीले कपड़े बेहतर रहेंगे।"
             },
             {
               "id": "wear.ac_layer",
-              "title": "एसी लेयर",
-              "explanation": "एसी में ठंड महसूस होने की आपकी पसंद के आधार पर एक हल्का लेयर साथ रखें।"
+              "title": "एसी के लिए हल्की लेयर",
+              "explanation": "चूंकि आपको एसी में ठंड महसूस होती है, इसलिए एक हल्की लेयर साथ रखें।"
             },
             {
               "id": "wear.formality",
-              "title": "ड्रेस कोड",
-              "explanation": "Bastian - At The Top के लिए ग्लैमरस या स्मार्ट चिक ड्रेस कोड का पालन करें।"
+              "title": "ड्रेस कोड का ध्यान रखें",
+              "explanation": "वेन्यू के अनुसार ग्लैमरस या स्मार्ट चिक लुक अपनाएं; पुरुषों के लिए खुले जूते और एथलेटिक गियर वर्जित हो सकते हैं।"
             }
           ],
           "carry": [],
           "check": [
             {
+              "id": "check.indoor_ac",
+              "title": "एसी की जांच करें",
+              "explanation": "चूंकि इंडोर एसी की जानकारी अज्ञात है, इसलिए वेन्यू से पूछ लें कि क्या वहां एयर-कंडीशनिंग है।"
+            },
+            {
               "id": "check.drop_off_cover",
-              "title": "ड्रॉप-ऑफ कवर",
-              "explanation": "चूंकि आप कार से जा रहे हैं, जांच लें कि क्या प्रवेश द्वार पर कवर किया गया ड्रॉप-ऑफ उपलब्ध है।"
+              "title": "ड्रॉप-ऑफ कवर की जांच",
+              "explanation": "चूंकि आप कार से जा रहे हैं, पता करें कि क्या प्रवेश द्वार पर ढका हुआ ड्रॉप-ऑफ उपलब्ध है।"
             },
             {
               "id": "check.waterlogging",
               "title": "जलभराव की स्थिति",
-              "explanation": "स्थानीय जलभराव की स्थिति अभी अज्ञात है।"
+              "explanation": "स्थानीय जलभराव की स्थिति अज्ञात है, इसलिए निकलने से पहले इसकी जांच कर लें।"
             }
           ]
         }
@@ -804,7 +814,7 @@
         {
           "name": "Scribe transcribed mr speech",
           "pass": true,
-          "detail": "\"उद्या संध्याकाळी सात वाजता बॅस्टियनला जायचं आहे. अकरा वाजेपर्यंत परत येईन. मला AC मध्ये थंडी वाजते\" (lang mar, p=1)"
+          "detail": "\"उद्या संध्याकाळी सात वाजता बॅस्टिनला जायचं आहे. अकरा वाजेपर्यंत परत येईन. मला AC मध्ये थंडी वाजते\" (lang mar, p=1)"
         },
         {
           "name": "destination flagged ambiguous (two Bastian branches)",
@@ -814,7 +824,7 @@
         {
           "name": "Marathi \"उद्या\" resolved to tomorrow",
           "pass": true,
-          "detail": "date 2026-10-05; confirmations: none"
+          "detail": "date 2026-10-06; confirmations: none"
         },
         {
           "name": "times extracted in 24h Mumbai time",
@@ -834,17 +844,17 @@
         {
           "name": "spoken numbers appear in displayed data",
           "pass": true,
-          "detail": "numbers: 33.7, 84"
+          "detail": "numbers: 33.5, 82"
         },
         {
           "name": "spoken summary in Devanagari (mr)",
           "pass": true,
-          "detail": "Bastian - At The Top साठी, 33.7°C तापमान आणि 84% आर्द्रतेमुळे श्वास घेण्यायोग्य आणि सैल कपडे वापरा. तुम्हाला एसीमध्ये थंडी वाजते, म्हणून एक हलकी लेयर सोबत ठेवा. वेन्यूचा ड्रेस कोड 'Smart Chic' आहे, तसेच कार तुम्हाला छताखाली सोडेल का ते एकदा तपासा."
+          "detail": "Bastian - At The Top साठी हवेशीर आणि सैल कपडे निवडा कारण तापमान 33.5°C आणि आर्द्रता 82% असेल. तुम्हाला एसीमध्ये थंडी वाजते, म्हणून एक हलकी लेयर सोबत ठेवा आणि कार तुम्हाला छताखाली सोडेल का ते तपासा."
         },
         {
           "name": "spoken audio matches displayed summary (TTS → STT round trip)",
           "pass": true,
-          "detail": "TTS eleven_v3, 356981 bytes; agreement 91%; heard \"Bastian at the top साठी thirty-thirty point seven degree celsius तापमान आणि चौऱ्यांशी टक्के आर्द्रतेमुळे श्वास घेण्यायोग्य आणि सैल कपडे वापरा. तुम्हाला AC मध्ये थंडी वाजते म्हणून एक हलकी layer सोबत ठेवा. Venue चा dress code smart chic आहे. तसेच car तुम्हाला छताखाली सोडेल का ते एकदा तपासा.\""
+          "detail": "TTS eleven_v3, 278822 bytes; agreement 91%; heard \"Bastian at the top साठी हवेशीर आणि सैल कपडे निवडा. कारण तापमान तेहतीस point पाच degree celsius आणि आर्द्रता ब्यांशी टक्के असेल. तुम्हाला AC मध्ये थंडी वाजते म्हणून एक हलकी layer सोबत ठेवा आणि car तुम्हाला छताखाली सोडेल का ते तपासा.\""
         },
         {
           "name": "TTS refuses text that is not a backend summary",
@@ -855,16 +865,16 @@
       "notes": [],
       "data": {
         "transcript": {
-          "text": "उद्या संध्याकाळी सात वाजता बॅस्टियनला जायचं आहे. अकरा वाजेपर्यंत परत येईन. मला AC मध्ये थंडी वाजते",
+          "text": "उद्या संध्याकाळी सात वाजता बॅस्टिनला जायचं आहे. अकरा वाजेपर्यंत परत येईन. मला AC मध्ये थंडी वाजते",
           "languageCode": "mar",
           "languageProbability": 1,
           "model": "scribe_v2"
         },
         "parsed": {
-          "destinationText": "बॅस्टियनला",
+          "destinationText": "बॅस्टिनला",
           "destinationLatin": "Bastian",
           "dateExpression": "उद्या संध्याकाळी",
-          "date": "2026-10-05",
+          "date": "2026-10-06",
           "dateAmbiguous": false,
           "departure": "19:00",
           "return": "23:00",
@@ -886,40 +896,40 @@
         "weather": {
           "status": "cached",
           "usable": true,
-          "retrievedAt": "2026-10-04T13:36:19.678Z",
+          "retrievedAt": "2026-10-05T09:35:12.485Z",
           "grid": [
             19.015816,
             72.86982
           ]
         },
         "window": {
-          "start": "2026-10-05T19:00",
-          "end": "2026-10-05T23:00",
+          "start": "2026-10-06T19:00",
+          "end": "2026-10-06T23:00",
           "returnsNextDay": false,
           "durationMinutes": 240
         },
         "hours": [
-          "2026-10-05T19:00",
-          "2026-10-05T20:00",
-          "2026-10-05T21:00",
-          "2026-10-05T22:00",
-          "2026-10-05T23:00"
+          "2026-10-06T19:00",
+          "2026-10-06T20:00",
+          "2026-10-06T21:00",
+          "2026-10-06T22:00",
+          "2026-10-06T23:00"
         ],
         "whole": {
-          "from": "2026-10-05T19:00",
-          "to": "2026-10-05T23:00",
+          "from": "2026-10-06T19:00",
+          "to": "2026-10-06T23:00",
           "hours": 5,
-          "temperatureMaxC": 29.3,
-          "feelsLikeMaxC": 33.7,
-          "feelsLikeMinC": 33.6,
-          "humidityMaxPct": 84,
-          "rainProbabilityMaxPct": 0,
+          "temperatureMaxC": 29,
+          "feelsLikeMaxC": 33.5,
+          "feelsLikeMinC": 33.1,
+          "humidityMaxPct": 82,
+          "rainProbabilityMaxPct": 7,
           "precipitationTotalMm": 0,
           "precipitationMaxHourlyMm": 0,
           "uvIndexMaxHourly": 0,
-          "uvIndexMaxHourlyAt": "2026-10-05T19:00",
-          "windMaxKmh": 11.5,
-          "gustMaxKmh": 29.9,
+          "uvIndexMaxHourlyAt": "2026-10-06T19:00",
+          "windMaxKmh": 9.8,
+          "gustMaxKmh": 25.9,
           "cloudCoverMeanPct": 1
         },
         "items": [
@@ -934,26 +944,26 @@
           "used": true,
           "runtime": "gemini_api",
           "model": "gemma-4-26b-a4b-it",
-          "latencyMs": 13246,
+          "latencyMs": 12478,
           "validation": {
             "passed": true,
             "errors": [],
             "retried": false
           }
         },
-        "spoken": "Bastian - At The Top साठी, 33.7°C तापमान आणि 84% आर्द्रतेमुळे श्वास घेण्यायोग्य आणि सैल कपडे वापरा. तुम्हाला एसीमध्ये थंडी वाजते, म्हणून एक हलकी लेयर सोबत ठेवा. वेन्यूचा ड्रेस कोड 'Smart Chic' आहे, तसेच कार तुम्हाला छताखाली सोडेल का ते एकदा तपासा.",
-        "outfit": "33.7°C तापमान आणि 84% आर्द्रतेसाठी सैल आणि श्वास घेण्यायोग्य कपडे वापरा, सोबत एसीसाठी एक हलकी लेयर आणि वेन्यूच्या 'Smart Chic' ड्रेस कोडचे पालन करा.",
+        "spoken": "Bastian - At The Top साठी हवेशीर आणि सैल कपडे निवडा कारण तापमान 33.5°C आणि आर्द्रता 82% असेल. तुम्हाला एसीमध्ये थंडी वाजते, म्हणून एक हलकी लेयर सोबत ठेवा आणि कार तुम्हाला छताखाली सोडेल का ते तपासा.",
+        "outfit": "33.5°C तापमान आणि 82% आर्द्रतेसाठी हवेशीर, सैल कपडे आणि एसीसाठी एक हलकी लेयर सोबत ठेवा.",
         "cards": {
           "wear": [
             {
               "id": "wear.breathable_fabric",
-              "title": "श्वास घेण्यायोग्य कापड",
-              "explanation": "33.7°C तापमान आणि 84% आर्द्रतेमुळे सुती किंवा लिनेनसारखे हलके कापड वापरा."
+              "title": "हवेशीर कापड",
+              "explanation": "33.5°C तापमान आणि 82% आर्द्रतेमुळे सुती किंवा लिननसारखे हवेशीर कापड वापरावे."
             },
             {
               "id": "wear.loose_fit",
               "title": " सैल कपडे",
-              "explanation": "33.7°C तापमान आणि 84% आर्द्रतेमुळे हवा खेळती राहण्यासाठी सैल कपडे निवडा."
+              "explanation": "33.5°C तापमान आणि 82% आर्द्रतेमुळे हवा खेळती राहण्यासाठी सैल कपडे निवडा."
             },
             {
               "id": "wear.ac_layer",
@@ -962,7 +972,7 @@
             },
             {
               "id": "wear.formality",
-              "title": "ड्रेस कोड",
+              "title": "वेन्यू ड्रेस कोड",
               "explanation": "Bastian - At The Top साठी 'Glamorous / Smart Chic' ड्रेस कोडची सूचना आहे."
             }
           ],
@@ -975,8 +985,8 @@
             },
             {
               "id": "check.waterlogging",
-              "title": "पाण्याचा निचरा",
-              "explanation": "स्थानिक पाणी साचण्याच्या स्थितीची माहिती सध्या उपलब्ध नाही."
+              "title": "पाणी साचण्याची स्थिती",
+              "explanation": "स्थानिक पाणी साचण्याच्या स्थितीबद्दल माहिती सध्या उपलब्ध नाही."
             }
           ]
         }
@@ -990,12 +1000,12 @@
         {
           "name": "agent ASR transcribed hi speech",
           "pass": true,
-          "detail": "कल शाम 07:00 बजे Bastion जाना है। 11:00 बजे तक लौटूँगी। मुझे AC में ठंड लगती है। || दादर वाला, बास्टियन एट द टॉप। || हाँ, कल यानी आने वाला दिन, शाम सात से रात ग्यारह बजे तक, सही है।"
+          "detail": "कल शाम 07:00 बजे Bastian जाना है। 11:00 बजे तक लौटूँगी। मुझे AC में ठंड लगती है। || दादर वाला, बास्टियन एट द टॉप। || हाँ, कल यानी आने वाला दिन शाम सात से रात ग्यारह बजे तक सही है।"
         },
         {
           "name": "agent called set_outing_details with the venue in Latin letters (spelling variants matched by the backend)",
           "pass": true,
-          "detail": "{\"destination\":\"Bastian\",\"date\":\"2026-10-05\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"feels_cold_in_ac\":true}"
+          "detail": "{\"destination\":\"Bastian\",\"date\":\"2026-10-06\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"feels_cold_in_ac\":true}"
         },
         {
           "name": "backend reported the venue as ambiguous to the agent",
@@ -1015,74 +1025,74 @@
         {
           "name": "agent spoke the backend summary (agreement ≥ 85%)",
           "pass": true,
-          "detail": "agreement 100%\n      summary: 33.7°C तापमान और 84% आर्द्रता के कारण ढीले और सांस लेने योग्य कपड़े पहनें। चूंकि आपको एसी में ठंड लगती है, एक हल्की लेयर साथ रखें। वेन्यू से एसी और कवर्ड ड्रॉप-ऑफ के बारे में पूछ लें। साथ ही, वेन्यू के ड्रेस कोड और जलभराव की स्थिति का भी ध्यान रखें।\n      agent said: 33.7 डिग्री सेल्सियस तापमान और 84 प्रतिशत आर्द्रता के कारण ढीले और सांस लेने योग्य कपड़े पहनें। चूंकि आपको एसी में ठंड लगती है, एक हल्की लेयर साथ रखें। वेन्यू से एसी और कवर्ड ड्रॉप-ऑफ के बारे में पूछ लें। साथ ही, वेन्यू के ड्रेस कोड और जलभराव की स्थिति का भी ध्यान रखें। पूरी जानकारी स्क्रीन पर उपलब्ध है।"
+          "detail": "agreement 100%\n      summary: 33.5°C तापमान और 82% ह्यूमिडिटी के कारण सांस लेने योग्य और ढीले कपड़े पहनना अच्छा रहेगा। चूंकि आपको AC में ठंड लगती है, एक हल्की लेयर साथ रखें। वेन्यू से AC और कवर्ड ड्रॉप-ऑफ के बारे में पूछ लें। साथ ही, वेन्यू के 'Smart Chic' ड्रेस कोड का ध्यान रखें।\n      agent said: तैंतीस दशमलव पांच डिग्री सेल्सियस तापमान और बयासी प्रतिशत ह्यूमिडिटी के कारण सांस लेने योग्य और ढीले कपड़े पहनना अच्छा रहेगा। चूंकि आपको एसी में ठंड लगती है, एक हल्की लेयर साथ रखें। वेन्यू से एसी और कवर्ड ड्रॉप-ऑफ के बारे में पूछ लें। साथ ही, वेन्यू के 'स्मार्ट चिक' ड्रेस कोड का ध्यान रखें।\n\nपूरी जानकारी स्क्रीन पर उपलब्ध है।"
         },
         {
           "name": "form ended on the Dadar branch, tomorrow",
           "pass": true,
-          "detail": "Bastian - At The Top 2026-10-05 19:00-23:00"
+          "detail": "Bastian - At The Top 2026-10-06 19:00-23:00"
         }
       ],
       "notes": [
-        "agent audio received: 1595226 bytes; formats {\"in\":\"pcm_16000\",\"out\":\"pcm_16000\"}"
+        "agent audio received: 1972854 bytes; formats {\"in\":\"pcm_16000\",\"out\":\"pcm_16000\"}"
       ],
       "data": {
         "events": [
           {
-            "t": 403,
+            "t": 536,
             "type": "metadata",
-            "text": "{\"conversation_id\":\"conv_5301m43j9pfnfd3amm6rx77fncxr\",\"agent_output_audio_format\":\"pcm_16000\",\"user_input_audio_format\":\"pcm_16000\",\"persistent_session_token\":null}"
+            "text": "{\"conversation_id\":\"conv_1801m45pt803f1t8k0t7x81e4hkx\",\"agent_output_audio_format\":\"pcm_16000\",\"user_input_audio_format\":\"pcm_16000\",\"persistent_session_token\":null}"
           },
           {
-            "t": 1521,
+            "t": 1435,
             "type": "agent_response",
             "text": "नमस्ते! आप मुंबई में कहाँ जा रहे हैं, किस दिन, और कब निकलेंगे और कब लौटेंगे?"
           },
           {
-            "t": 6790,
+            "t": 6466,
             "type": "user_audio_sent",
-            "text": "6.3s of audio"
+            "text": "8.3s of audio"
           },
           {
-            "t": 16106,
+            "t": 93390,
             "type": "user_transcript",
-            "text": "कल शाम 07:00 बजे Bastion जाना है। 11:00 बजे तक लौटूँगी। मुझे AC में ठंड लगती है।"
+            "text": "कल शाम 07:00 बजे Bastian जाना है। 11:00 बजे तक लौटूँगी। मुझे AC में ठंड लगती है।"
           },
           {
-            "t": 16108,
+            "t": 93392,
             "type": "tool_call",
             "tool": "set_outing_details",
             "params": {
               "destination": "Bastian",
-              "date": "2026-10-05",
+              "date": "2026-10-06",
               "departure_time": "19:00",
               "return_time": "23:00",
               "feels_cold_in_ac": true
             }
           },
           {
-            "t": 16117,
+            "t": 93779,
             "type": "tool_result",
             "tool": "set_outing_details",
-            "result": "{\"destination_status\":\"ambiguous\",\"destination\":null,\"destination_options\":[\"1. Bastian - At The Top — Kohinoor Square, Dadar West · forecast point: Dadar West\",\"2. Bastian (Bandra West) — Linking Road, Bandra West · forecast point: Khar West\"],\"date\":\"2026-10-05\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"schedule_confirmed\":false,\"outdoor_exposure\":\"minimal\",\"transport\":\"car\",\"covered_drop_off\":\"unknown\",\"feels_cold_in_ac\":true,\"occasion\":null,\"ready_for_advice\":false,\"missing\":[\"destination: choose one of the matching places\",\"confirmation of date and times\"],\"next_step\":\"Read destinat"
+            "result": "{\"destination_status\":\"ambiguous\",\"destination\":null,\"destination_options\":[\"1. Bastian - At The Top — Kohinoor Square, Dadar West · forecast point: Dadar West\",\"2. Bastian (Bandra West) — Linking Road, Bandra West · forecast point: Khar West\"],\"date\":\"2026-10-06\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"schedule_confirmed\":false,\"outdoor_exposure\":\"minimal\",\"transport\":\"car\",\"covered_drop_off\":\"unknown\",\"feels_cold_in_ac\":true,\"occasion\":null,\"ready_for_advice\":false,\"missing\":[\"destination: choose one of the matching places\",\"confirmation of date and times\"],\"next_step\":\"Read destinat"
           },
           {
-            "t": 18180,
+            "t": 95503,
             "type": "agent_response",
-            "text": "बास्टियन के लिए दो विकल्प हैं: एक, कोहिनूर स्क्वायर, दादर वेस्ट में बास्टियन - एट द टॉप; दूसरा, लिंकिंग रोड, बांद्रा वेस्ट में बास्टियन। आप इनमें से कौन सा चुनना चाहेंगी?"
+            "text": "आपने कल शाम सात बजे बैस्टियन जाने और रात ग्यारह बजे तक लौटने का बताया है। आपको एसी में ठंड लगती है, यह भी मैंने नोट कर लिया है।\n\nबैस्टियन के दो विकल्प हैं:\nएक. बैस्टियन - एट द टॉप — कोहिनूर स्क्वायर, दादर वेस्ट\nदो. बैस्टियन (बांद्रा वेस्ट) — लिंकिंग रोड, बांद्रा वेस्ट\n\nआप इनमें से कौन सा चुनना चाहेंगी?"
           },
           {
-            "t": 30968,
+            "t": 116829,
             "type": "user_audio_sent",
             "text": "2.3s of audio"
           },
           {
-            "t": 35203,
+            "t": 121323,
             "type": "user_transcript",
             "text": "दादर वाला, बास्टियन एट द टॉप।"
           },
           {
-            "t": 35203,
+            "t": 121324,
             "type": "tool_call",
             "tool": "choose_destination",
             "params": {
@@ -1090,28 +1100,28 @@
             }
           },
           {
-            "t": 35203,
+            "t": 121324,
             "type": "tool_result",
             "tool": "choose_destination",
-            "result": "{\"destination_status\":\"resolved\",\"destination\":\"Bastian - At The Top\",\"date\":\"2026-10-05\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"schedule_confirmed\":false,\"outdoor_exposure\":\"minimal\",\"transport\":\"car\",\"covered_drop_off\":\"unknown\",\"feels_cold_in_ac\":true,\"occasion\":null,\"ready_for_advice\":false,\"missing\":[\"confirmation of date and times\"],\"next_step\":\"Read the date, departure and return times back to the user; when they agree, call confirm_details.\"}"
+            "result": "{\"destination_status\":\"resolved\",\"destination\":\"Bastian - At The Top\",\"date\":\"2026-10-06\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"schedule_confirmed\":false,\"outdoor_exposure\":\"minimal\",\"transport\":\"car\",\"covered_drop_off\":\"unknown\",\"feels_cold_in_ac\":true,\"occasion\":null,\"ready_for_advice\":false,\"missing\":[\"confirmation of date and times\"],\"next_step\":\"Read the date, departure and return times back to the user; when they agree, call confirm_details.\"}"
           },
           {
-            "t": 36471,
+            "t": 123051,
             "type": "agent_response",
-            "text": "तो, आपकी आउटिंग कल, पांच अक्टूबर दो हज़ार छब्बीस को शाम सात बजे से रात ग्यारह बजे तक बास्टियन - एट द टॉप, दादर वेस्ट में है। क्या यह सही है?"
+            "text": "ठीक है, दादर वाला बैस्टियन एट द टॉप। तो, आपकी आउटिंग कल, छह अक्टूबर दो हज़ार छब्बीस को शाम सात बजे से रात ग्यारह बजे तक बैस्टियन एट द टॉप, दादर वेस्ट के लिए तय हुई है। क्या यह सही है?"
           },
           {
-            "t": 47761,
+            "t": 136099,
             "type": "user_audio_sent",
-            "text": "5.3s of audio"
+            "text": "5.7s of audio"
           },
           {
-            "t": 54817,
+            "t": 143627,
             "type": "user_transcript",
-            "text": "हाँ, कल यानी आने वाला दिन, शाम सात से रात ग्यारह बजे तक, सही है।"
+            "text": "हाँ, कल यानी आने वाला दिन शाम सात से रात ग्यारह बजे तक सही है।"
           },
           {
-            "t": 54818,
+            "t": 143627,
             "type": "tool_call",
             "tool": "confirm_details",
             "params": {
@@ -1119,15 +1129,15 @@
             }
           },
           {
-            "t": 69914,
+            "t": 159108,
             "type": "tool_result",
             "tool": "confirm_details",
-            "result": "{\"destination_status\":\"resolved\",\"destination\":\"Bastian - At The Top\",\"date\":\"2026-10-05\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"schedule_confirmed\":true,\"outdoor_exposure\":\"minimal\",\"transport\":\"car\",\"covered_drop_off\":\"unknown\",\"feels_cold_in_ac\":true,\"occasion\":null,\"ready_for_advice\":true,\"missing\":[],\"next_step\":\"If this result contains advice.spoken_summary, read it aloud word for word now. Otherwise call get_outing_advice.\",\"advice\":{\"status\":\"ok\",\"spoken_summary\":\"33.7°C तापमान और 84% आर्द्रता के कारण ढीले और सांस लेने योग्य कपड़े पहनें। चूंकि आपको एसी में ठंड लगती है, एक हल्क"
+            "result": "{\"destination_status\":\"resolved\",\"destination\":\"Bastian - At The Top\",\"date\":\"2026-10-06\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"schedule_confirmed\":true,\"outdoor_exposure\":\"minimal\",\"transport\":\"car\",\"covered_drop_off\":\"unknown\",\"feels_cold_in_ac\":true,\"occasion\":null,\"ready_for_advice\":true,\"missing\":[],\"next_step\":\"If this result contains advice.spoken_summary, read it aloud word for word now. Otherwise call get_outing_advice.\",\"advice\":{\"status\":\"ok\",\"spoken_summary\":\"33.5°C तापमान और 82% ह्यूमिडिटी के कारण सांस लेने योग्य और ढीले कपड़े पहनना अच्छा रहेगा। चूंकि आपको AC में ठंड लगत"
           },
           {
-            "t": 71310,
+            "t": 160986,
             "type": "agent_response",
-            "text": "33.7 डिग्री सेल्सियस तापमान और 84 प्रतिशत आर्द्रता के कारण ढीले और सांस लेने योग्य कपड़े पहनें। चूंकि आपको एसी में ठंड लगती है, एक हल्की लेयर साथ रखें। वेन्यू से एसी और कवर्ड ड्रॉप-ऑफ के बारे में पूछ लें। साथ ही, वेन्यू के ड्रेस कोड और जलभराव की स्थिति का भी ध्यान रखें। पूरी जानकारी स्क्रीन पर उपलब्ध है।"
+            "text": "तैंतीस दशमलव पांच डिग्री सेल्सियस तापमान और बयासी प्रतिशत ह्यूमिडिटी के कारण सांस लेने योग्य और ढीले कपड़े पहनना अच्छा रहेगा। चूंकि आपको एसी में ठंड लगती है, एक हल्की लेयर साथ रखें। वेन्यू से एसी और कवर्ड ड्रॉप-ऑफ के बारे में पूछ लें। साथ ही, वेन्यू के 'स्मार्ट चिक' ड्रेस कोड का ध्यान रखें।\n\nपूरी जानकारी स्क्रीन पर उपलब्ध है।"
           }
         ],
         "form": {
@@ -1141,7 +1151,7 @@
               "lon": 72.83811
             }
           },
-          "date": "2026-10-05",
+          "date": "2026-10-06",
           "departure": "19:00",
           "return": "23:00",
           "outdoorExposure": "minimal",
@@ -1164,12 +1174,12 @@
         {
           "name": "agent ASR transcribed mr speech",
           "pass": true,
-          "detail": "उद्या संध्याकाळी सात वाजता बास्टियनला जायचं आहे. अकरा वाजेपर्यंत परत येईन. मला AC मध्ये थंडी वाजते. || दादरचं, बास्टियन एट द टॉप. || हो, बरोबर आहे."
+          "detail": "उद्या संध्याकाळी सात वाजता बॅस्टियनला जायचं आहे. अकरा वाजेपर्यंत परत येईन. मला AC मध्ये थंडी वाजते. || दादरचं, बॅस्टियन अट द टॉप. || हो, बरोबर आहे."
         },
         {
           "name": "agent called set_outing_details with the venue in Latin letters (spelling variants matched by the backend)",
           "pass": true,
-          "detail": "{\"destination\":\"Bastian\",\"date\":\"2026-10-05\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"feels_cold_in_ac\":true}"
+          "detail": "{\"destination\":\"Bastian\",\"date\":\"2026-10-06\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"feels_cold_in_ac\":true}"
         },
         {
           "name": "backend reported the venue as ambiguous to the agent",
@@ -1189,74 +1199,74 @@
         {
           "name": "agent spoke the backend summary (agreement ≥ 85%)",
           "pass": true,
-          "detail": "agreement 100%\n      summary: बाहेर ३३.७°C तापमान आणि ८४% आर्द्रता असल्याने सुती आणि सैल कपडे वापरा. तुम्हाला एसीमध्ये थंडी वाजते, म्हणून एक हलकी लेयर सोबत ठेवा. कृपया वेन्यूमध्ये एसी आहे का आणि कार छताखाली उतरू शकते का ते तपासा.\n      agent said: बाहेर तेहतीस पूर्णांक सात अंश सेल्सिअस तापमान आणि चौऱ्याऐंशी टक्के आर्द्रता असल्याने सुती आणि सैल कपडे वापरा. तुम्हाला एसीमध्ये थंडी वाजते, म्हणून एक हलकी लेयर सोबत ठेवा. कृपया वेन्यूमध्ये एसी आहे का आणि कार छताखाली उतरू शकते का ते तपासा. पूर्ण माहिती तुम्हाला स्क्रीनवर दिसेल."
+          "detail": "agreement 100%\n      summary: Bastian - At The Top साठी ३३.५°C तापमान आणि ८२% आर्द्रतेमुळे सुती आणि सैल कपडे वापरा. तुम्हाला एसीमध्ये थंडी वाजते, म्हणून एक हलकी लेअर सोबत ठेवा आणि तिथे एसी आहे का ते तपासा. तसेच, कार तुम्हाला छताखाली सोडेल का याची खात्री करून घ्या.\n      agent said: बॅस्टियन - ॲट द टॉप साठी तेहतीस पॉईंट पाच अंश सेल्सिअस तापमान आणि ऐंशी दोन टक्के आर्द्रतेमुळे सुती आणि सैल कपडे वापरा. तुम्हाला एसीमध्ये थंडी वाजते, म्हणून एक हलकी लेअर सोबत ठेवा आणि तिथे एसी आहे का ते तपासा. तसेच, कार तुम्हाला छताखाली सोडेल का याची खात्री करून घ्या. पूर्ण माहिती तुमच्या स्क्रीनवर दिसत आहे."
         },
         {
           "name": "form ended on the Dadar branch, tomorrow",
           "pass": true,
-          "detail": "Bastian - At The Top 2026-10-05 19:00-23:00"
+          "detail": "Bastian - At The Top 2026-10-06 19:00-23:00"
         }
       ],
       "notes": [
-        "agent audio received: 1612851 bytes; formats {\"in\":\"pcm_16000\",\"out\":\"pcm_16000\"}"
+        "agent audio received: 1873971 bytes; formats {\"in\":\"pcm_16000\",\"out\":\"pcm_16000\"}"
       ],
       "data": {
         "events": [
           {
-            "t": 443,
+            "t": 531,
             "type": "metadata",
-            "text": "{\"conversation_id\":\"conv_6501m43jc3k4fg0vz3jcxjqqe4gy\",\"agent_output_audio_format\":\"pcm_16000\",\"user_input_audio_format\":\"pcm_16000\",\"persistent_session_token\":null}"
+            "text": "{\"conversation_id\":\"conv_4901m45pzcqafyra0hfzprhz9qm4\",\"agent_output_audio_format\":\"pcm_16000\",\"user_input_audio_format\":\"pcm_16000\",\"persistent_session_token\":null}"
           },
           {
-            "t": 2852,
+            "t": 3271,
             "type": "agent_response",
             "text": "नमस्कार! तुम्ही मुंबईत कुठे जात आहात, कोणत्या दिवशी, आणि कधी निघणार व कधी परत येणार?"
           },
           {
-            "t": 8875,
+            "t": 10798,
             "type": "user_audio_sent",
-            "text": "7.8s of audio"
+            "text": "7.1s of audio"
           },
           {
-            "t": 19091,
+            "t": 20758,
             "type": "user_transcript",
-            "text": "उद्या संध्याकाळी सात वाजता बास्टियनला जायचं आहे. अकरा वाजेपर्यंत परत येईन. मला AC मध्ये थंडी वाजते."
+            "text": "उद्या संध्याकाळी सात वाजता बॅस्टियनला जायचं आहे. अकरा वाजेपर्यंत परत येईन. मला AC मध्ये थंडी वाजते."
           },
           {
-            "t": 19091,
+            "t": 20764,
             "type": "tool_call",
             "tool": "set_outing_details",
             "params": {
               "destination": "Bastian",
-              "date": "2026-10-05",
+              "date": "2026-10-06",
               "departure_time": "19:00",
               "return_time": "23:00",
               "feels_cold_in_ac": true
             }
           },
           {
-            "t": 19108,
+            "t": 21006,
             "type": "tool_result",
             "tool": "set_outing_details",
-            "result": "{\"destination_status\":\"ambiguous\",\"destination\":null,\"destination_options\":[\"1. Bastian - At The Top — Kohinoor Square, Dadar West · forecast point: Dadar West\",\"2. Bastian (Bandra West) — Linking Road, Bandra West · forecast point: Khar West\"],\"date\":\"2026-10-05\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"schedule_confirmed\":false,\"outdoor_exposure\":\"minimal\",\"transport\":\"car\",\"covered_drop_off\":\"unknown\",\"feels_cold_in_ac\":true,\"occasion\":null,\"ready_for_advice\":false,\"missing\":[\"destination: choose one of the matching places\",\"confirmation of date and times\"],\"next_step\":\"Read destinat"
+            "result": "{\"destination_status\":\"ambiguous\",\"destination\":null,\"destination_options\":[\"1. Bastian - At The Top — Kohinoor Square, Dadar West · forecast point: Dadar West\",\"2. Bastian (Bandra West) — Linking Road, Bandra West · forecast point: Khar West\"],\"date\":\"2026-10-06\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"schedule_confirmed\":false,\"outdoor_exposure\":\"minimal\",\"transport\":\"car\",\"covered_drop_off\":\"unknown\",\"feels_cold_in_ac\":true,\"occasion\":null,\"ready_for_advice\":false,\"missing\":[\"destination: choose one of the matching places\",\"confirmation of date and times\"],\"next_step\":\"Read destinat"
           },
           {
-            "t": 22490,
+            "t": 25137,
             "type": "agent_response",
-            "text": "तुम्ही बास्टियन - एट द टॉप, दादर वेस्टला जात आहात की बास्टियन (वांद्रे वेस्ट), लिंकिंग रोडला? कृपया एक पर्याय निवडा."
+            "text": "तुम्ही बॅस्टियनच्या कोणत्या शाखेला जात आहात? दादर पश्चिम येथील कोहिनूर स्क्वेअरमधील बॅस्टियन - ॲट द टॉप, की लिंकिंग रोड, वांद्रे पश्चिम येथील बॅस्टियन?"
           },
           {
-            "t": 29014,
+            "t": 33912,
             "type": "user_audio_sent",
-            "text": "2.6s of audio"
+            "text": "2.4s of audio"
           },
           {
-            "t": 33728,
+            "t": 38564,
             "type": "user_transcript",
-            "text": "दादरचं, बास्टियन एट द टॉप."
+            "text": "दादरचं, बॅस्टियन अट द टॉप."
           },
           {
-            "t": 33728,
+            "t": 38567,
             "type": "tool_call",
             "tool": "choose_destination",
             "params": {
@@ -1264,28 +1274,28 @@
             }
           },
           {
-            "t": 33729,
+            "t": 38567,
             "type": "tool_result",
             "tool": "choose_destination",
-            "result": "{\"destination_status\":\"resolved\",\"destination\":\"Bastian - At The Top\",\"date\":\"2026-10-05\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"schedule_confirmed\":false,\"outdoor_exposure\":\"minimal\",\"transport\":\"car\",\"covered_drop_off\":\"unknown\",\"feels_cold_in_ac\":true,\"occasion\":null,\"ready_for_advice\":false,\"missing\":[\"confirmation of date and times\"],\"next_step\":\"Read the date, departure and return times back to the user; when they agree, call confirm_details.\"}"
+            "result": "{\"destination_status\":\"resolved\",\"destination\":\"Bastian - At The Top\",\"date\":\"2026-10-06\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"schedule_confirmed\":false,\"outdoor_exposure\":\"minimal\",\"transport\":\"car\",\"covered_drop_off\":\"unknown\",\"feels_cold_in_ac\":true,\"occasion\":null,\"ready_for_advice\":false,\"missing\":[\"confirmation of date and times\"],\"next_step\":\"Read the date, departure and return times back to the user; when they agree, call confirm_details.\"}"
           },
           {
-            "t": 38713,
+            "t": 43901,
             "type": "agent_response",
-            "text": "ठीक आहे. तर, तुम्ही उद्या, पाच ऑक्टोबर दोन हजार सव्वीस रोजी संध्याकाळी सात वाजता बास्टियन - एट द टॉप, दादर वेस्टला जात आहात आणि रात्री अकरा वाजेपर्यंत परत येणार आहात. हे बरोबर आहे का?"
+            "text": "ठीक आहे. तर, तुम्ही उद्या, सहा ऑक्टोबर दोन हजार सव्वीस रोजी संध्याकाळी सात वाजता दादर पश्चिम येथील बॅस्टियन - ॲट द टॉप येथे जात आहात आणि रात्री अकरा वाजेपर्यंत परत येणार आहात. हे बरोबर आहे का?"
           },
           {
-            "t": 49247,
+            "t": 54441,
             "type": "user_audio_sent",
-            "text": "1.7s of audio"
+            "text": "1.4s of audio"
           },
           {
-            "t": 52231,
+            "t": 57828,
             "type": "user_transcript",
             "text": "हो, बरोबर आहे."
           },
           {
-            "t": 52232,
+            "t": 57829,
             "type": "tool_call",
             "tool": "confirm_details",
             "params": {
@@ -1293,15 +1303,15 @@
             }
           },
           {
-            "t": 66356,
+            "t": 72035,
             "type": "tool_result",
             "tool": "confirm_details",
-            "result": "{\"destination_status\":\"resolved\",\"destination\":\"Bastian - At The Top\",\"date\":\"2026-10-05\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"schedule_confirmed\":true,\"outdoor_exposure\":\"minimal\",\"transport\":\"car\",\"covered_drop_off\":\"unknown\",\"feels_cold_in_ac\":true,\"occasion\":null,\"ready_for_advice\":true,\"missing\":[],\"next_step\":\"If this result contains advice.spoken_summary, read it aloud word for word now. Otherwise call get_outing_advice.\",\"advice\":{\"status\":\"ok\",\"spoken_summary\":\"बाहेर ३३.७°C तापमान आणि ८४% आर्द्रता असल्याने सुती आणि सैल कपडे वापरा. तुम्हाला एसीमध्ये थंडी वाजते, म्हणून एक हलक"
+            "result": "{\"destination_status\":\"resolved\",\"destination\":\"Bastian - At The Top\",\"date\":\"2026-10-06\",\"departure_time\":\"19:00\",\"return_time\":\"23:00\",\"schedule_confirmed\":true,\"outdoor_exposure\":\"minimal\",\"transport\":\"car\",\"covered_drop_off\":\"unknown\",\"feels_cold_in_ac\":true,\"occasion\":null,\"ready_for_advice\":true,\"missing\":[],\"next_step\":\"If this result contains advice.spoken_summary, read it aloud word for word now. Otherwise call get_outing_advice.\",\"advice\":{\"status\":\"ok\",\"spoken_summary\":\"Bastian - At The Top साठी ३३.५°C तापमान आणि ८२% आर्द्रतेमुळे सुती आणि सैल कपडे वापरा. तुम्हाला एसीमध्ये थंडी वाजते"
           },
           {
-            "t": 73817,
+            "t": 80290,
             "type": "agent_response",
-            "text": "बाहेर तेहतीस पूर्णांक सात अंश सेल्सिअस तापमान आणि चौऱ्याऐंशी टक्के आर्द्रता असल्याने सुती आणि सैल कपडे वापरा. तुम्हाला एसीमध्ये थंडी वाजते, म्हणून एक हलकी लेयर सोबत ठेवा. कृपया वेन्यूमध्ये एसी आहे का आणि कार छताखाली उतरू शकते का ते तपासा. पूर्ण माहिती तुम्हाला स्क्रीनवर दिसेल."
+            "text": "बॅस्टियन - ॲट द टॉप साठी तेहतीस पॉईंट पाच अंश सेल्सिअस तापमान आणि ऐंशी दोन टक्के आर्द्रतेमुळे सुती आणि सैल कपडे वापरा. तुम्हाला एसीमध्ये थंडी वाजते, म्हणून एक हलकी लेअर सोबत ठेवा आणि तिथे एसी आहे का ते तपासा. तसेच, कार तुम्हाला छताखाली सोडेल का याची खात्री करून घ्या. पूर्ण माहिती तुमच्या स्क्रीनवर दिसत आहे."
           }
         ],
         "form": {
@@ -1315,7 +1325,7 @@
               "lon": 72.83811
             }
           },
-          "date": "2026-10-05",
+          "date": "2026-10-06",
           "departure": "19:00",
           "return": "23:00",
           "outdoorExposure": "minimal",
@@ -1338,7 +1348,7 @@
         {
           "name": "baseline live fetch",
           "pass": true,
-          "detail": "live @ 2026-10-04T13:42:54.678Z"
+          "detail": "live @ 2026-10-05T09:41:57.349Z"
         },
         {
           "name": "outage with recent cache → STALE label, retrieval time shown, not live",
@@ -1368,7 +1378,7 @@
             "status": "stale",
             "usable": true,
             "notice": "Live forecast unavailable (Simulated weather provider outage (test scenario)). Showing the forecast retrieved 0 min ago — not live.",
-            "retrievedAt": "2026-10-04T13:42:54.678Z",
+            "retrievedAt": "2026-10-05T09:41:57.349Z",
             "grid": [
               18.80492,
               72.92036
@@ -1390,17 +1400,17 @@
             "from": "2026-10-05T18:00",
             "to": "2026-10-05T21:00",
             "hours": 4,
-            "temperatureMaxC": 29.2,
-            "feelsLikeMaxC": 34.2,
-            "feelsLikeMinC": 33.6,
-            "humidityMaxPct": 82,
+            "temperatureMaxC": 29.8,
+            "feelsLikeMaxC": 34.7,
+            "feelsLikeMinC": 34,
+            "humidityMaxPct": 81,
             "rainProbabilityMaxPct": 0,
             "precipitationTotalMm": 0,
             "precipitationMaxHourlyMm": 0,
             "uvIndexMaxHourly": 0.3,
             "uvIndexMaxHourlyAt": "2026-10-05T18:00",
-            "windMaxKmh": 16.4,
-            "gustMaxKmh": 27,
+            "windMaxKmh": 17.7,
+            "gustMaxKmh": 25.9,
             "cloudCoverMeanPct": 1
           },
           "items": [
@@ -1414,26 +1424,26 @@
             "used": true,
             "runtime": "gemini_api",
             "model": "gemma-4-26b-a4b-it",
-            "latencyMs": 11319,
+            "latencyMs": 10790,
             "validation": {
               "passed": true,
               "errors": [],
               "retried": false
             }
           },
-          "spoken": "Since the forecast is stale, please note that the feels-like temperature is 34.2°C with 82% humidity. I recommend wearing loose, breathable fabrics. As you are traveling by car, check if you can get a covered drop-off. Also, keep in mind that sunset is at 18:23 and waterlogging status is unknown.",
-          "outfit": "Wear loose, breathable fabrics to stay comfortable in the 34.2°C feels-like temperature and 82% humidity.",
+          "spoken": "Since the forecast is stale, please note it may be out of date. For your trip to Colāba, wear breathable fabrics and a loose fit due to the 34.7°C feels-like temperature and 81% humidity. Since you are in a car, check if you can get a covered drop-off.",
+          "outfit": "Wear loose-fitting, breathable fabrics to stay comfortable in the 34.7°C feels-like temperature and 81% humidity.",
           "cards": {
             "wear": [
               {
                 "id": "wear.breathable_fabric",
                 "title": "Breathable Fabrics",
-                "explanation": "Opt for cotton or linen because the feels-like temperature is 34.2°C and humidity is 82%."
+                "explanation": "Opt for cotton or linen because the feels-like temperature is 34.7°C and humidity is 81%."
               },
               {
                 "id": "wear.loose_fit",
                 "title": "Loose Single-Layer Fit",
-                "explanation": "Wear loose clothing to allow airflow, as the feels-like temperature reaches 34.2°C and humidity is 82%."
+                "explanation": "Wear loose clothing to allow airflow, as the feels-like temperature reaches 34.7°C and humidity is 81%."
               }
             ],
             "carry": [],
@@ -1475,28 +1485,28 @@
             "used": true,
             "runtime": "gemini_api",
             "model": "gemma-4-26b-a4b-it",
-            "latencyMs": 7657,
+            "latencyMs": 7087,
             "validation": {
               "passed": true,
               "errors": [],
               "retried": false
             }
           },
-          "spoken": "Since the weather forecast is unavailable, I can't suggest specific clothing. However, as you are travelling by car, please check if you can be dropped off under cover. Also, be aware that the local waterlogging status is unknown.",
-          "outfit": "No specific outfit can be recommended as the weather forecast is currently unavailable.",
+          "spoken": "Since weather information is currently unavailable, I cannot suggest specific clothing. However, as you are travelling by car, please check if you can be dropped off under cover. Also, be aware that the local waterlogging status is unknown.",
+          "outfit": "No specific outfit can be recommended as weather information is unavailable.",
           "cards": {
             "wear": [],
             "carry": [],
             "check": [
               {
                 "id": "check.weather_unavailable",
-                "title": "Weather Forecast Unavailable",
+                "title": "Weather Advice Unavailable",
                 "explanation": "No weather-based advice can be provided because the weather status is unavailable due to a simulated provider outage."
               },
               {
                 "id": "check.drop_off_cover",
-                "title": "Check Car Drop-off",
-                "explanation": "Since you are travelling by car and the covered drop-off status is unknown, check if the vehicle can drop you under cover at the entrance."
+                "title": "Check Drop-off Cover",
+                "explanation": "Since you are travelling by car, check if your vehicle can drop you off under cover at the entrance."
               },
               {
                 "id": "check.waterlogging",
@@ -1516,7 +1526,7 @@
         {
           "name": "explains precise advice not yet available",
           "pass": true,
-          "detail": "The forecast currently reaches 2026-10-19 23:00 (Asia/Kolkata), about 16 days ahead. Precise weather-based advice for this date is not yet available — check again closer to the day."
+          "detail": "The forecast currently reaches 2026-10-20 23:00 (Asia/Kolkata), about 16 days ahead. Precise weather-based advice for this date is not yet available — check again closer to the day."
         }
       ],
       "notes": []
