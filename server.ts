@@ -10,6 +10,7 @@ import { voiceEnvFromProcess } from './server/voice/elevenlabs.ts';
 import { createApi } from './server/api.ts';
 import { PROVIDER_INFO } from './server/weather/openMeteo.ts';
 import { restaurantCount } from './server/places/restaurants.ts';
+import { googleMapsConfigured } from './server/places/googleMaps.ts';
 
 dotenv.config();
 
@@ -43,7 +44,7 @@ app.get('/healthz', (_req: Request, res: Response) => {
     runtime: { node: process.version, platform: process.platform },
     inference: gemma.describe(),
     weatherProvider: PROVIDER_INFO.name,
-    restaurants: { source: 'OpenStreetMap snapshot + live Nominatim', count: restaurantCount() },
+    restaurants: { source: 'OpenStreetMap snapshot + live Nominatim', count: restaurantCount(), googleMapsFallback: googleMapsConfigured() },
     voice: { elevenLabsConfigured: !!voice.apiKey, agentConfigured: !!(voice.apiKey && voice.agentId) },
   });
 });
