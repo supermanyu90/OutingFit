@@ -46,7 +46,8 @@ Everything else is already set in `render.yaml`:
 
 ## 3. Verify before calling it live
 
-1. **Health:** `curl https://<app>.onrender.com/healthz` should return `"environment":"production"`, `inference.primary.model = gemma-4-26b-a4b-it`, and `voice.agentConfigured = true`.
+1. **Health:** `curl https://<app>.onrender.com/healthz` should return `"environment":"production"`, `inference.primary.model = gemma-4-26b-a4b-it`, `voice.agentConfigured = true`, and `restaurants.count` above 2,000.
+   Then check a restaurant that only OpenStreetMap knows: `curl "https://<app>.onrender.com/api/v2/destinations/resolve?q=Cafe%20Madras"` should resolve to Cafe Madras, Matunga East.
 2. **End-to-end:** run the scenarios against the deployment:
    ```bash
    BASE=https://<app>.onrender.com npm run test:scenarios
@@ -60,4 +61,5 @@ Everything else is already set in `render.yaml`:
 - **Gemma failures.** If the Gemini API is slow or overloaded, the app stops trying it for 2 minutes (`GEMINI_BREAKER_MS`). The cards then show the rule engine's English wording with a visible notice. Nothing is labelled as Gemma unless Gemma wrote it.
 - **Caches.** The forecast cache (10 min, served as **stale** for up to 3 h if Open-Meteo fails) is held in memory. It's reset on every deploy or restart, and isn't shared if you scale to multiple instances.
 - **Open-Meteo licence.** The free tier is **non-commercial only** (under 10,000 calls/day). A commercial launch needs an Open-Meteo API subscription; weather data must be credited to Open-Meteo under CC BY 4.0, as the app already does.
+- **Restaurant list.** Every Mumbai eatery on OpenStreetMap ships in `server/data/mumbaiRestaurants.json`, so Render needs no extra service or key. To pick up newly mapped places, run `npm run data:restaurants` locally and push; Render redeploys. Names not in the snapshot are searched live on Nominatim, whose usage policy allows at most 1 request a second. The app enforces that limit and caches results for 24 h. Credit to OpenStreetMap (ODbL) is shown next to each result.
 - **Changing the agents.** After editing `scripts/agentConfig.ts`, run `npm run setup:agent` locally. It updates the same agents in place, so Render needs no change.

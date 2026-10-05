@@ -11,12 +11,12 @@ export type Language = (typeof LANGUAGES)[number];
 const hhmm = z.string().refine(isValidTime, 'must be HH:mm (24-hour)');
 
 export const ResolvedDestinationSchema = z.object({
-  kind: z.enum(['registry', 'place']),
-  /** Registry venue id (kind=registry). */
+  kind: z.enum(['registry', 'restaurant', 'place']),
+  /** Registry venue id (kind=registry) or OpenStreetMap id (kind=restaurant). */
   venueId: z.string().optional(),
-  /** Display name, e.g. "Olive Bar & Kitchen" or "Juhu". */
+  /** Display name, e.g. "Olive Bar & Kitchen", "Trishna" or "Juhu". */
   name: z.string().min(1).max(120),
-  /** Forecast point (GeoNames locality centroid). */
+  /** Forecast point: the restaurant itself (kind=restaurant), else a GeoNames locality centroid. */
   forecastPoint: z.object({
     label: z.string(),
     lat: z.number().min(18.5).max(19.6),

@@ -350,3 +350,41 @@ test('wardrobe: AC layer only when the decision layer asked for one; dress level
   assert.equal(w2.formalitySource, 'default');
   assert.ok(w2.families.flatMap((f) => f.ideas).every((i) => !i.layer));
 });
+
+// ---------------------------------------------------------- restaurants (OSM)
+import { searchRestaurants, searchRestaurantsLive, restaurantCount } from '../server/places/restaurants.ts';
+
+test('restaurant snapshot covers Mumbai well beyond the curated registry', () => {
+  assert.ok(restaurantCount() > 1500, String(restaurantCount()));
+});
+
+test('restaurant search: exact name, branches, area narrowing, sentences and typos', () => {
+  const names = (q: string) => searchRestaurants(q).restaurants.map((r) => `${r.name} @ ${r.locality}`);
+  assert.deepEqual(names('Cafe Madras'), ['Cafe Madras @ Matunga East']);
+  assert.ok(names('mahesh lunch home').length >= 2, 'every branch is offered');
+  assert.deepEqual(names('mahesh lunch home juhu'), ['Mahesh Lunch Home @ Juhu']);
+  assert.deepEqual(names('Bombay Canteen'), ['The Bombay Canteen @ Lower Parel'], 'a leading "The" is optional');
+  assert.equal(searchRestaurants('dinner at cafe madras tonight').tier, 2);
+  assert.ok(names('Britania').some((n) => n.startsWith('Britannia')), 'one-letter slip');
+  assert.deepEqual(names('zzqx nothing'), [], 'a stray word does not match on the other word alone');
+});
+
+test('live restaurant search keeps only Mumbai eateries and reports HTTP failures', async () => {
+  const fake = (async () =>
+    new Response(
+      JSON.stringify([
+        { osm_type: 'node', osm_id: 1, lat: '19.1', lon: '72.83', category: 'amenity', type: 'restaurant', name: 'New Place', address: { suburb: 'Juhu' } },
+        { osm_type: 'way', osm_id: 2, lat: '19.1', lon: '72.83', category: 'highway', type: 'residential', name: 'New Place Road' },
+      ]),
+      { status: 200 }
+    )) as unknown as typeof fetch;
+  const r = await searchRestaurantsLive('new place test', 1000, fake);
+  assert.deepEqual(r, [{ id: 'n1', name: 'New Place', type: 'restaurant', locality: 'Juhu', lat: 19.1, lon: 72.83 }]);
+  const down = (async () => new Response('busy', { status: 503 })) as unknown as typeof fetch;
+  await assert.rejects(searchRestaurantsLive('another test', 1000, down), /HTTP 503/);
+});
+
+test('a restaurant destination validates with its own coordinates', () => {
+  const r = req({ destination: { kind: 'restaurant', venueId: 'n1977933168', name: 'Cafe Madras', forecastPoint: { label: 'Cafe Madras, Matunga East (OpenStreetMap)', lat: 19.02767, lon: 72.85505 } } });
+  assert.equal(r.destination.kind, 'restaurant');
+});
