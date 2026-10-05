@@ -69,8 +69,11 @@ services:
       - key: NOMINATIM_URL
         value: https://nominatim.openstreetmap.org/search
 
-      # --- Optional ---
+      # Google Maps fallback (SerpApi) for restaurants OpenStreetMap doesn't know.
+      # Optional and paid per search; leave blank to skip it.
       - key: SERPAPI_API_KEY
         sync: false
+
+      # --- Optional ---
       - key: SENTRY_DSN
         sync: false

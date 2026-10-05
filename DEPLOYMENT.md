@@ -34,7 +34,7 @@ The ElevenLabs agents live in your ElevenLabs account, not on Render. The deploy
    - `ELEVENLABS_AGENT_ID` (the main agent: English + Hindi)
    - `ELEVENLABS_AGENT_ID_MR` (the Marathi agent)
    - `ELEVENLABS_VOICE_ID`
-   - `SERPAPI_API_KEY` and `SENTRY_DSN` are optional; leave them blank if unused.
+   - `SERPAPI_API_KEY` is optional: it turns on the Google Maps fallback for restaurants OpenStreetMap doesn't know (paid per search). `SENTRY_DSN` is optional too. Leave either blank if unused.
 4. **Apply.** Render builds and deploys. Later pushes to `main` redeploy automatically (`autoDeploy: true`).
 
 Everything else is already set in `render.yaml`:
@@ -46,7 +46,7 @@ Everything else is already set in `render.yaml`:
 
 ## 3. Verify before calling it live
 
-1. **Health:** `curl https://<app>.onrender.com/healthz` should return `"environment":"production"`, `inference.primary.model = gemma-4-26b-a4b-it`, `voice.agentConfigured = true`, and `restaurants.count` above 2,000.
+1. **Health:** `curl https://<app>.onrender.com/healthz` should return `"environment":"production"`, `inference.primary.model = gemma-4-26b-a4b-it`, `voice.agentConfigured = true`, and `restaurants.count` above 2,000, and `restaurants.googleMapsFallback = true` if you set `SERPAPI_API_KEY`.
    Then check a restaurant that only OpenStreetMap knows: `curl "https://<app>.onrender.com/api/v2/destinations/resolve?q=Cafe%20Madras"` should resolve to Cafe Madras, Matunga East.
 2. **End-to-end:** run the scenarios against the deployment:
    ```bash
@@ -62,4 +62,5 @@ Everything else is already set in `render.yaml`:
 - **Caches.** The forecast cache (10 min, served as **stale** for up to 3 h if Open-Meteo fails) is held in memory. It's reset on every deploy or restart, and isn't shared if you scale to multiple instances.
 - **Open-Meteo licence.** The free tier is **non-commercial only** (under 10,000 calls/day). A commercial launch needs an Open-Meteo API subscription; weather data must be credited to Open-Meteo under CC BY 4.0, as the app already does.
 - **Restaurant list.** Every Mumbai eatery on OpenStreetMap ships in `server/data/mumbaiRestaurants.json`, so Render needs no extra service or key. To pick up newly mapped places, run `npm run data:restaurants` locally and push; Render redeploys. Names not in the snapshot are searched live on Nominatim, whose usage policy allows at most 1 request a second. The app enforces that limit and caches results for 24 h. Credit to OpenStreetMap (ODbL) is shown next to each result.
+- **Google Maps fallback.** To turn it on for an existing service, add `SERPAPI_API_KEY` under **Environment** in the Render dashboard and save; Render restarts the service. Each search Google answers costs one SerpApi search, so watch usage on your SerpApi dashboard.
 - **Changing the agents.** After editing `scripts/agentConfig.ts`, run `npm run setup:agent` locally. It updates the same agents in place, so Render needs no change.

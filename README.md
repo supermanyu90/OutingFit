@@ -82,6 +82,7 @@ Render, via the `render.yaml` Blueprint — see [DEPLOYMENT.md](DEPLOYMENT.md).
   - the free tier is **non-commercial**, with fewer than 10,000 calls a day. Commercial use needs a paid plan.
 - **Geocoding (GeoNames via Open-Meteo)** finds localities, not venues. Curated venues use the nearest locality, shown as "forecast point".
 - **Restaurants (OpenStreetMap)**: every named eatery OSM has in Greater Mumbai (restaurants, cafés, fast food, bars, pubs, food courts, ice cream; about 2,100 places) ships as a snapshot in `server/data/mumbaiRestaurants.json`. When the snapshot has no match, the app asks Nominatim live (at most 1 request a second, results cached for 24 h). Data © OpenStreetMap contributors, ODbL; the attribution is shown next to every result. Refresh the snapshot with `npm run data:restaurants`. OSM doesn't list every Mumbai restaurant (Gajalee, for example, is missing), and it has no valet, dress-code or AC facts.
+- **Restaurants (Google Maps via SerpApi)**, optional: with `SERPAPI_API_KEY` set, a name that no curated venue, OSM entry or locality matches is searched on Google Maps (`server/places/googleMaps.ts`). Each call is a paid SerpApi search, so it runs only as that last resort and results are cached for 24 h. Results are labelled "Google Maps via SerpApi". Without a key the step is skipped.
 
 ## Completed vs planned
 
@@ -93,7 +94,7 @@ Render, via the `render.yaml` Blueprint — see [DEPLOYMENT.md](DEPLOYMENT.md).
   - hourly UV kept separate from the daily maximum,
   - current conditions labelled as a model estimate, not an observation,
   - an explanation when the date is beyond the forecast horizon.
-- Destination resolution across the curated registry, every OpenStreetMap restaurant in Mumbai and GeoNames localities, with an ambiguity prompt for branches ("Mahesh Lunch Home") and a "add the area" hint when there are many ("Starbucks"). Date and time confirmation (Asia/Kolkata, return after midnight handled).
+- Destination resolution across the curated registry, every OpenStreetMap restaurant in Mumbai, GeoNames localities and (with a SerpApi key) Google Maps, with an ambiguity prompt for branches ("Mahesh Lunch Home") and a "add the area" hint when there are many ("Starbucks"). Date and time confirmation (Asia/Kolkata, return after midnight handled).
 - A configurable decision layer, plus Gemma personalisation with output validation and real-Gemma fallback (Gemini API, then local Ollama).
 - **Wardrobe ideas**: concrete outfits grouped by garment family, not gender. The families are dresses & skirts, shirts & trousers, Indian wear (kurta sets, anarkali, sarees, Nehru jacket, bandhgala) and co-ords & jumpsuits. They're filtered by dress level (chosen, or taken from the venue dress code or occasion) and annotated from the same decisions: fabric for heat, coverage for UV, hem length and fabric for rain, and a matching layer for AC (`server/wardrobe/`).
 - Wear / Carry / Check cards with evidence chips, product-evidence caveats (UV400/ISO 12312-1, UPF, SPF 30), and "Already own this?" toggles.

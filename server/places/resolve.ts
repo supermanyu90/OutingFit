@@ -1,6 +1,7 @@
 /**
  * Destination resolution: curated venue registry + every OpenStreetMap restaurant
- * in Mumbai + GeoNames localities.
+ * in Mumbai + GeoNames localities, with Google Maps (SerpApi) as the last resort
+ * for restaurants none of those know.
  *
  * Returns every plausible candidate. The caller must ask the user to choose
  * when more than one candidate is returned — weather is never fetched for an
@@ -10,6 +11,7 @@
 import { REPUTED_VENUES, VenueRecord } from '../data/mumbaiRegistry.ts';
 import { foldName, geocodeMumbai, GeocodeCandidate } from '../weather/openMeteo.ts';
 import { OSM_ATTRIBUTION, RestaurantRecord, searchRestaurants, searchRestaurantsLive } from './restaurants.ts';
+import { GOOGLE_ATTRIBUTION, searchRestaurantsGoogle } from './googleMaps.ts';
 import { ResolvedDestination } from '../domain.ts';
 
 export const REGISTRY_SOURCE = 'OutingFit curated venue registry (not independently verified)';
@@ -20,7 +22,7 @@ export interface DestinationCandidate {
   id: string;
   destination: ResolvedDestination;
   subtitle: string;
-  source: 'registry' | 'osm' | 'geonames';
+  source: 'registry' | 'osm' | 'google' | 'geonames';
 }
 
 export interface ResolveResult {
@@ -78,16 +80,17 @@ async function forecastPointForVenue(v: VenueRecord, timeoutMs: number): Promise
 
 function restaurantCandidate(r: RestaurantRecord): DestinationCandidate {
   const kind = r.cuisine?.length ? r.cuisine.slice(0, 2).join(', ') : r.type.replace(/_/g, ' ');
+  const google = r.id.startsWith('g:');
   return {
-    id: `osm:${r.id}`,
+    id: google ? `google:${r.id.slice(2)}` : `osm:${r.id}`,
     destination: {
       kind: 'restaurant',
       venueId: r.id,
       name: r.name,
-      forecastPoint: { label: `${r.name}, ${r.locality} (OpenStreetMap)`, lat: r.lat, lon: r.lon },
+      forecastPoint: { label: `${r.name}, ${r.locality} (${google ? 'Google Maps' : 'OpenStreetMap'})`, lat: r.lat, lon: r.lon },
     },
-    subtitle: `${r.locality} · ${kind} · ${OSM_ATTRIBUTION}`,
-    source: 'osm',
+    subtitle: `${r.locality} · ${kind} · ${google ? GOOGLE_ATTRIBUTION : OSM_ATTRIBUTION}`,
+    source: google ? 'google' : 'osm',
   };
 }
 
@@ -157,7 +160,7 @@ export async function resolveDestination(query: string, timeoutMs: number): Prom
     }
   }
   restaurants = rankRestaurants(q, restaurants.filter((r) => !coveredByRegistry(r)));
-  const restaurantTotal = restaurants.length;
+  let restaurantTotal = restaurants.length;
   for (const r of restaurants.slice(0, MAX_RESTAURANT_CANDIDATES)) candidates.push(restaurantCandidate(r));
 
   try {
@@ -171,7 +174,19 @@ export async function resolveDestination(query: string, timeoutMs: number): Prom
   }
 
   // A locality hit that is only the forecast point of a single matched venue adds no ambiguity.
-  const venues = candidates.filter((c) => c.source === 'registry' || c.source === 'osm');
+  // Google Maps is paid per search: ask it only when nothing else knows the name,
+  // and never for a plain locality ("Vile Parle").
+  if (candidates.length === 0) {
+    try {
+      const google = rankRestaurants(q, await searchRestaurantsGoogle(q, timeoutMs));
+      restaurantTotal = google.length;
+      for (const r of google.slice(0, MAX_RESTAURANT_CANDIDATES)) candidates.push(restaurantCandidate(r));
+    } catch (err: any) {
+      geocodingError = err.message;
+    }
+  }
+
+  const venues = candidates.filter((c) => c.source === 'registry' || c.source === 'osm' || c.source === 'google');
   const places = candidates.filter((c) => c.source === 'geonames');
   // An exact locality name ("Juhu") means the locality — not venues located there or
   // prefix matches like "Juhu Island". With no exact locality, venues take priority.

@@ -388,3 +388,46 @@ test('a restaurant destination validates with its own coordinates', () => {
   const r = req({ destination: { kind: 'restaurant', venueId: 'n1977933168', name: 'Cafe Madras', forecastPoint: { label: 'Cafe Madras, Matunga East (OpenStreetMap)', lat: 19.02767, lon: 72.85505 } } });
   assert.equal(r.destination.kind, 'restaurant');
 });
+
+// ------------------------------------------------- restaurants (Google Maps)
+import { searchRestaurantsGoogle, localityFromAddress } from '../server/places/googleMaps.ts';
+
+const serp = (body: unknown, status = 200) => {
+  const urls: string[] = [];
+  const f = (async (url: string) => {
+    urls.push(String(url));
+    return new Response(JSON.stringify(body), { status });
+  }) as unknown as typeof fetch;
+  return { f, urls };
+};
+
+test('Google Maps lookup is skipped without a SerpApi key', async () => {
+  const { f, urls } = serp({ local_results: [] });
+  assert.deepEqual(await searchRestaurantsGoogle('gajalee', 1000, '', f), []);
+  assert.equal(urls.length, 0, 'no paid search without a key');
+});
+
+test('Google Maps lookup keeps Mumbai eateries and reads locality from the address', async () => {
+  const { f, urls } = serp({
+    local_results: [
+      { title: 'Gajalee', place_id: 'abc', gps_coordinates: { latitude: 19.0995, longitude: 72.8466 }, address: 'Hanuman Rd, Vile Parle East, Mumbai, Maharashtra 400057', type: 'Seafood restaurant' },
+      { title: 'Gajalee Pune', place_id: 'pune', gps_coordinates: { latitude: 18.52, longitude: 73.85 }, address: 'Pune', type: 'Seafood restaurant' },
+      { title: 'Gajalee Tower', place_id: 'tower', gps_coordinates: { latitude: 19.1, longitude: 72.85 }, address: 'Andheri, Mumbai', type: 'Apartment building' },
+    ],
+  });
+  const r = await searchRestaurantsGoogle('gajalee test', 1000, 'key', f);
+  assert.deepEqual(r, [{ id: 'g:abc', name: 'Gajalee', type: 'seafood restaurant', locality: 'Vile Parle East', lat: 19.0995, lon: 72.8466 }]);
+  assert.match(urls[0], /engine=google_maps/);
+  assert.equal((await searchRestaurantsGoogle('gajalee test', 1000, 'key', f)).length, 1);
+  assert.equal(urls.length, 1, 'repeat searches come from the cache');
+});
+
+test('Google Maps lookup handles a single place, no results and errors', async () => {
+  const single = serp({ place_results: { title: 'Gajalee', place_id: 'one', gps_coordinates: { latitude: 19.0995, longitude: 72.8466 }, address: 'Vile Parle East, Mumbai', type: 'Restaurant' } });
+  assert.equal((await searchRestaurantsGoogle('single place test', 1000, 'key', single.f))[0]?.name, 'Gajalee');
+  const none = serp({ error: "Google hasn't returned any results for this query." });
+  assert.deepEqual(await searchRestaurantsGoogle('no result test', 1000, 'key', none.f), []);
+  const bad = serp({ error: 'Invalid API key.' }, 401);
+  await assert.rejects(searchRestaurantsGoogle('bad key test', 1000, 'key', bad.f), /Invalid API key/);
+  assert.equal(localityFromAddress('Juhu Tara Rd, Juhu, Mumbai, Maharashtra 400049'), 'Juhu');
+});
